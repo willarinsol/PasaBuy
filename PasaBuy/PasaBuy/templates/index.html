@@ -1,0 +1,72 @@
+<html>
+  {% load static %}
+  <head>
+    <link rel="stylesheet" href="{% static 'style.css' %}" />
+    <link rel="stylesheet" href="{% static 'index.css' %}" />
+    <title>PasaBuy - User Authentication</title>
+  </head>
+  <body>
+    <div class="header">
+      <img src="{% static 'images/loalogo.jpg' %}" class="loalogo" />
+      <h1>PasaBuy</h1>
+    </div>
+
+    <div class="page">
+      <div class="authenticationcard">
+        <div class="tabs">
+          <button class="tab active" type="button">Sign In</button>
+          <button class="tab" type="button">Log In</button>
+        </div>
+
+        <h1>User Authentication</h1>
+        <p class="authenticationdescription">
+          Institutional security requires pre-validation of an active academic
+          or enterprise credential prior to user profile instantiation.
+        </p>
+
+        <div class="protocol">◉ MANDATORY ACCESS PROTOCOL</div>
+
+        <form>
+          <div class="role-selection">
+            <select id="role" name="role">
+              <option>Student</option>
+              <option>Employee</option>
+            </select>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="fullname">Full Name *</label>
+              <input type="text" id="fullname" name="fullname" required />
+            </div>
+
+            <div class="form-group">
+              <label for="idnumber">Student ID / Employee ID *</label>
+              <input type="text" id="idnumber" name="idnumber" required />
+            </div>
+
+            <div class="form-group graduation">
+              <label for="graduation">Expected Graduation Term *</label>
+              <input type="text" id="graduation" name="graduation" required />
+            </div>
+          </div>
+
+          <label class="affirmation">
+            <input type="checkbox" required />
+            <div>
+              I solemnly affirm that this card credential belongs directly to
+              me, is legally unaltered, and represents my current standing at
+              Lyceum of Alabang Inc. Submitting fraudulent credentials invokes
+              institutional disciplinary sanction and immediate revocation of
+              PasaBuy portal credentials.
+            </div>
+          </label>
+
+          <button class="submit-btn" type="submit">
+            Submit for Verification
+          </button>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

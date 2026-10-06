@@ -1,0 +1,162 @@
+.header h1 {
+    color: #ffffff;
+}
+
+.page{
+    display: flex;
+    justify-content: center;
+    padding-top: 31px;
+}
+
+
+.authenticationcard {
+    align-items: center;
+    margin-bottom: 25px;
+    width: 70vh;
+    height: 85vh;
+    background: #fff;
+    border-radius: 25px 25px 25px 25px;
+    padding: 25px 27px 35px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+.tabs {
+    height: 8vh;
+    background: #052764;
+    border-radius: 7px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    overflow: visible;
+}
+
+.tab {
+    border: none;
+    background: transparent;
+    color: white;
+    font-size: 28px;
+    font-weight: 700;
+    
+    
+}
+
+.tab.active {
+    background: #fff;
+    border: 7px solid #052764;
+    border-radius: 15px;
+    color: #111;
+}
+
+.protocol {
+    display: inline-block;
+    background: #dfe3ff;
+    color: #4059ff;
+    padding: 7px;
+    border-radius: 5px;
+    font-size: 11px;
+    font-weight: 750;
+}
+
+.role-selection {
+    margin-top: 20px;
+}
+
+select {
+    width: 13vh;
+    height: 3vh;
+    border: none;
+    border-radius: 5px;
+    background: #ffb5b5;
+    color: #555;
+    padding: 0 10px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 70px;
+    row-gap: 17px;
+    margin-top: 14px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-size: 14px;
+    color: #555;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+
+.form-group input {
+    width: 100%;
+    height: 35px;
+    border: none;
+    border-radius: 6px;
+    background: #e9eaed;
+    padding: 7px 10px;
+    outline: none;
+    font-size: 14px;
+}
+
+.form-group input:focus {
+    box-shadow: 0 0 0 2px #8299d8;
+}
+
+
+.graduation {
+    grid-column: 1 / 2;
+}
+
+.affirmation {
+    margin-top: 18px;
+    background: #cdd0f0;
+    border-radius: 6px;
+    height: 12vh;
+    padding: 12px 12px;
+    display: flex;
+    align-items: flex-start;
+    gap: 22px;
+    color: #555;
+    font-size: 14px;
+    line-height: 1.25;
+}
+
+.affirmation input {
+    appearance: none;
+    flex: 0 0 19px;
+    width: 20px;
+    height: 20px;
+    background: white;
+    cursor: pointer;
+}
+
+.affirmation input:checked {
+    background: #052764;
+    box-shadow: inset 0 0 0 4px white;
+}
+
+
+.submit-btn {
+    display: block;
+    margin: 23px auto;
+    background: #052764;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 12px 18px;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.15);
+}
+
+.submit-btn:hover {
+    background: #083582;
+}
+
