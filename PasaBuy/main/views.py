@@ -6,3 +6,7 @@ def index(request):
 
 def hero_page(request):
     return render(request, "heropage.html")
+
+
+def order_page(request):
+    return render(request, 'orderpage.html')

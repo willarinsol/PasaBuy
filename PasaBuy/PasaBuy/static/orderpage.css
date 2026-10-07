@@ -1,0 +1,600 @@
+:root {
+    --navy: #00205c;
+    --blue: #2038ff;
+    --yellow: #ffe000;
+    --bg: #f1f1f1;
+    --shadow: 0 2px 10px rgba(0,0,0,.08);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Helvetica, Arial, "Liberation Sans", sans-serif;
+    background: var(--bg);
+    color: #000;
+    min-height: 100vh;
+}
+
+button, input, textarea {
+    font-family: inherit;
+    color: inherit;
+}
+
+:focus-visible {
+    outline: 2px solid var(--blue);
+    outline-offset: 2px;
+}
+
+[hidden] {
+    display: none !important;
+}
+
+/* ---------- Header ---------- */
+header {
+    height: 72px;
+    background: var(--navy);
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 20px;
+    padding: 0 21px;
+    box-shadow: 0 5px 8px rgba(0,0,0,.25);
+}
+
+.bell {
+    background: none;
+    border: 0;
+    width: 30px;
+    height: 30px;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+}
+
+.post-btn {
+    background: var(--blue);
+    color: #fff;
+    border: 0;
+    border-radius: 12px;
+    height: 43px;
+    padding: 0 20px 0 17px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-weight: 700;
+    font-size: 15px;
+    line-height: 1.1;
+    cursor: pointer;
+    text-align: center;
+}
+
+.avatar-me {
+    width: 37px;
+    height: 37px;
+    border-radius: 50%;
+    background: var(--yellow);
+    display: grid;
+    place-items: center;
+    font-weight: 700;
+    font-size: 15px;
+}
+
+/* ---------- Page ---------- */
+main {
+    padding: 0 57px 60px 16px;
+}
+
+h1 {
+    font-size: 23px;
+    font-weight: 700;
+    padding-top: 42px;
+    letter-spacing: -.1px;
+}
+
+h2 {
+    font-size: 17.5px;
+    font-weight: 700;
+}
+
+.sub {
+    font-size: 17px;
+    color: #555;
+    margin-top: 6px;
+}
+
+.card {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+}
+
+.layout {
+    display: grid;
+    grid-template-columns: minmax(0,1fr) 316px;
+    gap: 57px;
+    margin-top: 13px;
+    align-items: start;
+}
+
+.pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    padding: 4px 9px 4px 10px;
+    height: 34px;
+    margin-top: 13px;
+    font-weight: 700;
+    font-size: 13.5px;
+    white-space: nowrap;
+}
+
+.pill .clock {
+    width: 30px;
+    height: 26px;
+    border-radius: 6px;
+    background: #fff0c2;
+    display: grid;
+    place-items: center;
+}
+
+.pill .sep {
+    display: inline-block;
+    width: 2px;
+    height: 15px;
+    background: #000;
+    margin: 0 6px;
+}
+
+/* ---------- Poster card ---------- */
+.poster {
+    height: 64px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 0 13px 0 19px;
+}
+
+.poster .av {
+    width: 41px;
+    height: 41px;
+    border-radius: 50%;
+    background: var(--yellow);
+    display: grid;
+    place-items: center;
+    font-weight: 700;
+    font-size: 16px;
+    flex: none;
+}
+
+.poster .meta {
+    flex: 1;
+    min-width: 0;
+}
+
+.poster .name {
+    font-weight: 700;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.poster .stats {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12.5px;
+    color: #666;
+    margin-top: 1px;
+    flex-wrap: wrap;
+}
+
+.poster .dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: #ccc;
+}
+
+.poster .sid {
+    color: var(--blue);
+}
+
+.poster .stats [hidden] {
+    display: none;
+}
+
+.msg-btn {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    border: 1px solid #000;
+    background: #fff;
+    border-radius: 6px;
+    height: 28px;
+    padding: 0 10px;
+    font-weight: 700;
+    font-size: 12.5px;
+    cursor: pointer;
+}
+
+/* ---------- Order details ---------- */
+.details {
+    margin-top: 39px;
+    padding: 24px 28px 20px;
+    min-height: 173px;
+    position: relative;
+}
+
+.form-details {
+    margin-top: 23px;
+}
+
+.details .tgt {
+    font-size: 12px;
+    color: #444;
+    margin-top: 1px;
+}
+
+.badge {
+    position: absolute;
+    top: 39px;
+    right: 25px;
+    background: #c5c9ff;
+    color: var(--blue);
+    font-weight: 700;
+    font-size: 7.5px;
+    padding: 0 8px;
+    height: 16px;
+    line-height: 16px;
+    border-radius: 4px;
+}
+
+.items {
+    margin-top: 46px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    font-weight: 700;
+    font-size: 12.5px;
+}
+
+.items .row {
+    display: flex;
+    gap: 14px;
+    min-height: 16px;
+}
+
+.items .q {
+    min-width: 26px;
+}
+
+/* ---------- Description / comment box ---------- */
+.desc {
+    margin-top: 44px;
+    padding: 22px 28px 18px;
+}
+
+.comment-box {
+    display: flex;
+    gap: 10px;
+    margin-top: 14px;
+    align-items: flex-start;
+}
+
+.c-av {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--yellow);
+    display: grid;
+    place-items: center;
+    font-weight: 700;
+    font-size: 11px;
+    flex: none;
+}
+
+.comment-box textarea {
+    flex: 1;
+    width: 100%;
+    min-height: 54px;
+    resize: vertical;
+    border: 1px solid #d6d6d6;
+    border-radius: 12px;
+    padding: 9px 12px;
+    font-size: 12.5px;
+    line-height: 1.4;
+    background: #fafafa;
+    color: #333;
+}
+
+.comment-box textarea::placeholder {
+    color: #777;
+}
+
+.comment-box textarea:focus {
+    outline: none;
+    border-color: var(--blue);
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(32,56,255,.12);
+}
+
+.counter {
+    text-align: right;
+    font-size: 10.5px;
+    color: #999;
+    margin-top: 5px;
+}
+
+.bubble-wrap {
+    flex: 1;
+    min-width: 0;
+}
+
+.bubble {
+    background: var(--bg);
+    border-radius: 4px 12px 12px 12px;
+    padding: 9px 12px;
+    font-size: 12.5px;
+    line-height: 1.4;
+    color: #333;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+.link-btn {
+    border: 0;
+    background: none;
+    color: var(--blue);
+    font-weight: 700;
+    font-size: 11.5px;
+    cursor: pointer;
+    padding: 5px 2px 0;
+}
+
+.link-btn:hover {
+    text-decoration: underline;
+}
+
+.edit-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+    margin-top: 6px;
+}
+
+.save-btn {
+    border: 0;
+    background: var(--blue);
+    color: #fff;
+    font-weight: 700;
+    font-size: 12px;
+    border-radius: 8px;
+    height: 28px;
+    padding: 0 16px;
+    cursor: pointer;
+}
+
+/* ---------- Compensation card ---------- */
+.comp {
+    border: 1.5px solid var(--blue);
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: var(--shadow);
+    padding: 22px 19px 21px;
+    position: sticky;
+    top: 16px;
+}
+
+.comp .lbl {
+    font-size: 11px;
+    font-weight: 500;
+    color: #555;
+    text-transform: uppercase;
+}
+
+.comp .amt {
+    display: flex;
+    align-items: baseline;
+    gap: 7px;
+    margin-top: 21px;
+}
+
+.comp .amt strong {
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.comp .amt .peso {
+    font-size: 28px;
+    font-weight: 700;
+    color: #000;
+}
+
+.comp .amt .small {
+    font-size: 11px;
+    color: #555;
+}
+
+.comp .amt .small b {
+    font-weight: 400;
+}
+
+.comp .amt input {
+    font-size: 28px;
+    font-weight: 700;
+    border: 0;
+    border-bottom: 1px dashed #bbb;
+    width: 100px;
+    background: transparent;
+    outline: none;
+    line-height: 1;
+}
+
+.comp .note {
+    font-size: 10.5px;
+    line-height: 1;
+    color: #444;
+    margin-top: 13px;
+    max-width: 230px;
+}
+
+.claim {
+    margin-top: 20px;
+    width: 100%;
+    height: 43px;
+    border: 0;
+    border-radius: 8px;
+    background: var(--blue);
+    color: #fff;
+    font-weight: 700;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    cursor: pointer;
+}
+
+.claim[disabled] {
+    background: #1a8f4a;
+    cursor: default;
+}
+
+.err {
+    color: #c62828;
+    font-size: 12px;
+    margin-top: 10px;
+    min-height: 14px;
+}
+
+/* ---------- Form inputs ---------- */
+.f-line {
+    border: 0;
+    border-bottom: 1px solid #444;
+    background: transparent;
+    font-size: 12px;
+    padding: 0 2px;
+    outline: none;
+    min-width: 0;
+}
+
+.f-line:focus {
+    border-bottom-color: var(--blue);
+}
+
+.pill .f-line {
+    font-size: 13.5px;
+    font-weight: 700;
+    width: 96px;
+    border-bottom: 1.5px solid #000;
+    padding: 0;
+}
+
+.tgt-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: #444;
+    margin-top: 6px;
+}
+
+.tgt-row .f-line {
+    width: 200px;
+}
+
+.ask {
+    font-weight: 700;
+    font-size: 13.5px;
+    margin-top: 38px;
+}
+
+.item-form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.item-form .r {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.item-form input {
+    border: 1px solid #d6d6d6;
+    border-radius: 6px;
+    height: 28px;
+    padding: 0 8px;
+    font-size: 12.5px;
+    background: #fafafa;
+}
+
+.item-form input:focus {
+    border-color: var(--blue);
+    outline: none;
+}
+
+.item-form .qty {
+    width: 48px;
+    text-align: center;
+}
+
+.item-form .nm {
+    flex: 1;
+    min-width: 0;
+}
+
+.item-form .rm {
+    border: 0;
+    background: none;
+    font-size: 18px;
+    color: #999;
+    cursor: pointer;
+    width: 24px;
+}
+
+.add-item {
+    align-self: flex-start;
+    border: 0;
+    background: none;
+    color: var(--blue);
+    font-weight: 700;
+    font-size: 12px;
+    cursor: pointer;
+    padding: 2px 0;
+}
+
+/* ---------- Mobile ---------- */
+@media (max-width: 900px) {
+    main {
+        padding: 0 16px 40px;
+    }
+    .layout {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+    .comp {
+        position: static;
+        order: -1;
+    }
+    .poster {
+        height: auto;
+        padding: 12px;
+        flex-wrap: wrap;
+    }
+    h1 {
+        font-size: 20px;
+    }
+}
