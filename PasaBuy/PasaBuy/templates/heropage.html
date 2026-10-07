@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+  {% load static %}
+  <head>
+    <link rel="stylesheet" href="{% static 'heropage.css' %}" />
+    <link rel="stylesheet" href="{% static 'style.css' %}" />
+    <title>Pasabuy - Landing Page</title>
+  </head>
+  <body>
+    <div class="header">
+      <img
+        src="{% static 'images/loalogo.jpg' %}"
+        class="loalogo"
+        alt="Lyceum of Alabang Logo"
+      />
+      <h1>PasaBuy</h1>
+    </div>
+
+    <div class="page">
+      <div class="welcome">
+        <h1>Hot Meals, Cafeteria Runs & Snacks,</h1>
+        <h2>Delivered by Peers Between Classes.</h2>
+
+        <p>
+          Craving lunch during a tight break or stuck in a lecture? Request meal
+          pickups from campus dining halls, food courts, and nearby favorite
+          eateries from classmates already on their way.
+        </p>
+      </div>
+
+      <div class="orderscard">
+        <div class="orderheader">
+          <div>
+            <h2>● Active Campus Orders</h2>
+            <p>
+              Real-time queue & handoffs. Delivered by student & employee peers.
+            </p>
+          </div>
+          <button type="button">See All Orders →</button>
+        </div>
+
+        <div class="orders">
+          <div class="order">
+            <h3>Jollibee 2-pc Chickenjoy</h3>
+            <p>DVA Gym Left Bench</p>
+
+            <div class="user">
+              <div class="profile">AR</div>
+
+              <div>
+                <strong>Will A.</strong>
+                <p>Verified ID</p>
+              </div>
+
+              <button type="button">Accept</button>
+            </div>
+          </div>
+
+          <div class="order">
+            <h3>Jollibee 2-pc Chickenjoy</h3>
+            <p>DVA Gym Left Bench</p>
+
+            <div class="user">
+              <div class="profile">AR</div>
+
+              <div>
+                <strong>Will A.</strong>
+                <p>Verified ID</p>
+              </div>
+
+              <button type="button">Accept</button>
+            </div>
+          </div>
+
+          <div class="order">
+            <h3>Jollibee 2-pc Chickenjoy</h3>
+            <p>DVA Gym Left Bench</p>
+
+            <div class="user">
+              <div class="profile">AR</div>
+
+              <div>
+                <strong>Will A.</strong>
+                <p>Verified ID</p>
+              </div>
+
+              <button type="button">Accept</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="statistics">
+        <div class="statcard">
+          <h3>1,420+ Meals</h3>
+          <p>Delivered this term</p>
+        </div>
+
+        <div class="statcard">
+          <h3>12 Mins Average</h3>
+          <p>Between Campus Drops</p>
+        </div>
+
+        <div class="statcard">
+          <h3>100% Verified IDs</h3>
+          <p>Exclusive to Lyceum of Alabang Only</p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

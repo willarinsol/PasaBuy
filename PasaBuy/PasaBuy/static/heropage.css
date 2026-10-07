@@ -1,0 +1,175 @@
+.welcome {
+    text-align: center;
+    margin-bottom: 25px;
+    margin-top: 50px;
+}
+
+
+.welcome h1 {
+    font-size: 39px;
+    margin-bottom: 0;
+    margin-top: 0;
+}
+
+
+.welcome h2 {
+    color: #0867e8;
+    font-size: 40px;
+    margin-top: 0;
+    margin-bottom: 0;
+    
+}
+
+
+.welcome p {
+    color: #6c758b;
+    font-size: 13px;
+    line-height: 1.5;
+    margin-top: 15px;
+}
+
+
+.orderscard {
+    width: 100vh;
+    height: 30vh;
+    margin: auto;
+    background: #fff;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+
+.orderheader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+.orderheader h2 {
+    font-size:20px;
+    margin-bottom: 4px;
+}
+
+
+.orderheader p {
+    color: #7c879e;
+    font-size: 10px;
+}
+
+
+.orderheader button {
+    background: #c4d1ec;
+    color: #1766df;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 10px;
+    font-size: 10px;
+    font-weight: 600;
+
+}
+
+
+.orders {
+    height: 20vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+}
+
+
+.order {
+    border: 1px solid #dce2ee;
+    border-radius: 8px;
+    background: #fafbff;
+    padding: 12px;
+}
+
+.order h3 {
+    font-size: 15px;
+    margin-bottom: 5px;
+}
+
+
+.order > p {
+    color: #7d879c;
+    font-size: 10px;
+
+}
+
+
+.user {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+
+.profile {
+    width: 5vh;
+    height: 5vh;
+    border-radius: 50%;
+    background: #202b47;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 9px;
+}
+
+
+.user strong {
+    font-size: 10px;
+}
+
+
+.user p {
+    color: #168b4c;
+    font-size: 9px;
+    margin-top: 2px;
+}
+
+
+.user button {
+    margin-left: auto;
+    background: #0966e9;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 6px 10px;
+    font-size: 8px;
+}
+
+
+
+.statistics {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    width: 80vh;
+    margin: 30px auto 0 auto;
+    height: auto;
+}
+
+
+.statcard {
+    background: white;
+    border: 1px solid #e2e6ef;
+    border-radius: 9px;
+    padding: 13px;
+}
+
+
+.statcard h3 {
+    font-size: 10px;
+    margin: 0 0 4px 0;
+}
+
+
+.statcard p {
+    color: #8a93a7;
+    font-size: 8px;
+    margin: 0;
+}
