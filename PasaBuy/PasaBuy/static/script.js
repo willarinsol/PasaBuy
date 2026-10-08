@@ -1,8 +1,14 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const tabSignIn = document.getElementById("tab-signin");
+  const page = document.querySelector(".page");
+  const tabSignUp = document.getElementById("tab-signup");
   const tabLogIn = document.getElementById("tab-login");
-  const viewSignIn = document.getElementById("view-signin");
+  const viewSignUp = document.getElementById("view-signup");
   const viewLogIn = document.getElementById("view-login");
+  const signupDetailsForm = document.getElementById("signup-details-form");
+  const signupIdForm = document.getElementById("signup-id-form");
+  const signupStepOne = document.getElementById("signup-step-1");
+  const signupStepTwo = document.getElementById("signup-step-2");
+  const backToDetails = document.getElementById("back-to-details");
   const togglePasswordBtn = document.getElementById("toggle-password-btn");
   const passwordInput = document.getElementById("login-password");
   const roleSelect = document.getElementById("role");
@@ -19,29 +25,53 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  roleSelect.addEventListener("change", updateGraduationField);
-  updateGraduationField();
+  if (roleSelect) {
+    roleSelect.addEventListener("change", updateGraduationField);
+    updateGraduationField();
+  }
 
-  // Tab Switcher Handler
   function switchTab(activeTab) {
-    if (activeTab === "signin") {
-      tabSignIn.classList.add("active");
+    if (activeTab === "signup") {
+      tabSignUp.classList.add("active");
       tabLogIn.classList.remove("active");
 
-      viewSignIn.classList.add("active");
+      viewSignUp.classList.add("active");
       viewLogIn.classList.remove("active");
     } else {
       tabLogIn.classList.add("active");
-      tabSignIn.classList.remove("active");
+      tabSignUp.classList.remove("active");
 
       viewLogIn.classList.add("active");
-      viewSignIn.classList.remove("active");
+      viewSignUp.classList.remove("active");
     }
   }
 
-  // Event Listeners for Tab Buttons
-  tabSignIn.addEventListener("click", () => switchTab("signin"));
+  function showSignupStep(step) {
+    signupStepOne.hidden = step !== 1;
+    signupStepTwo.hidden = step !== 2;
+  }
+
+  tabSignUp.addEventListener("click", () => switchTab("signup"));
   tabLogIn.addEventListener("click", () => switchTab("login"));
+
+  signupDetailsForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    if (signupDetailsForm.checkValidity()) {
+      showSignupStep(2);
+    }
+  });
+
+  backToDetails.addEventListener("click", () => showSignupStep(1));
+
+  signupIdForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    signupIdForm.checkValidity();
+  });
+
+  if (page.dataset.initialView === "upload") {
+    switchTab("signup");
+    showSignupStep(2);
+  }
 
   // Toggle Password Visibility Handler
   if (togglePasswordBtn && passwordInput) {

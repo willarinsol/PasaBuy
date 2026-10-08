@@ -16,10 +16,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from main.views import hero_page, index
+from main.views import browser, hero_page, index, my_orders, upload_id
 
 urlpatterns = [
     path('', index, name='index'),
     path('hero/', hero_page, name='hero'),
+    path('browser/', browser, name='browser'),
+    path('my-orders/', my_orders, name='my_orders'),
+    path('upload-id/', upload_id, name='upload_id'),
     path('admin/', admin.site.urls),
 ]

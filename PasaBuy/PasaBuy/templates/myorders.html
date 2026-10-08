@@ -1,129 +1,132 @@
+{% load static %}
 <html>
-<head>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="myorders.css">
+  <head>
+    <link rel="stylesheet" href="{% static 'style.css' %}" />
+    <link rel="stylesheet" href="{% static 'myorders.css' %}" />
     <title>PasaBuy - My Campus Food Orders</title>
-</head>
-<body>
-
-    <div class = "header">
-        <img src="loalogo.png" class="loalogo">
-        <h1>PasaBuy</h1>
+  </head>
+  <body>
+    <div class="header">
+      <img
+        src="{% static 'images/loalogo.jpg' %}"
+        class="loalogo"
+        alt="Lyceum of Alabang Logo"
+      />
+      <h1>PasaBuy</h1>
     </div>
 
-    <div class = "page">
-        <div class = "dashboardcontainer">
-            
-            <div class="topbar">
-                <div>
-                    <h1>My Campus Food Orders</h1>
-                    <p class="subdescription">
-                        Track your posted food requests, monitor accepted deliveries in transit, and manage pending runs looking for student runners.
-                    </p>
-                </div>
-                
-            </div>
-
-            <div class="statsoverview">
-                <div class="statbox allactive-box">
-                    <span class="statlabel">Total Active Orders</span>
-                    <h2>3</h2>
-                    <p class="statsub">2 on going, 1 pending</p>
-                </div>
-
-                <div class="statbox">
-                    <span class="statlabel">Pending Runner Acceptance</span>
-                    <h2>1</h2>
-                    <p class="statsub">Awaiting peer claim</p>
-                </div>
-
-                <div class="statbox">
-                    <span class="statlabel">Accepted & Ongoing</span>
-                    <h2>2</h2>
-                    <p class="statsub">Runner accepted</p>
-                </div>
-
-                <div class="statbox">
-                    <span class="statlabel">Completed This Term</span>
-                    <h2>18 <small>Orders</small></h2>
-                </div>
-            </div>
-
-            <div class="filterbar">
-                <div class="filtertabs">
-                    <button class="filterbtn active" type="button">All Active</button>
-                    <button class="filterbtn" type="button">Pending Runner</button>
-                    <button class="filterbtn" type="button">Accepted & Ongoing </button>
-                    <button class="filterbtn" type="button">Completed History (18)</button>
-                    
-                </div>
-            </div>
-
-            <div class="contentlayout">
-                
-                <div class="mainordercard">
-                    <div class="orderstatsheader">
-                        <span class="status">Pending Runner Claim</span>
-                    </div>
-
-                    <div class="orderbodygrid">
-                        <div class="orderdetails-left">
-                            <h2>SM Muntinlupa - Coco Milktea</h2>
-                            
-                            <div class="itemsbox">
-                                <span class="boxlabel">ORDERED MEAL ITEMS</span>
-                                <h3>1x Panda Milktea + Add Ons White Pearls<br> 2x Taro Milktea + 50% Sugar</h3>
-                            </div>
-                        </div>
-
-                        <div class="destinationcard">
-                            <span class="destlabel">Destination</span>
-                            <strong>PDIC Building Rm 198</strong>
-                            <p>Left Wing</p>
-                            </div>
-                    </div>
-
-                    <div class="orderfooter">
-                            <div class="totalcost">
-                                Total Cost: <span>₱150.00 + Food Cost</span>
-                            </div>
-
-                        <div class="actionbuttons">
-                            <button class="edit-btn" type="button">Edit Request</button>
-                            <button class="cancel-btn" type="button">Cancel Run (Refund)</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="sidebarinfo">
-                    <div class="protocolcard">
-                        <h3>Campus Protection</h3>
-                        
-                        <div class="infoblock">
-                            <strong>Payment Arrives as Order Does</strong>
-                            <p>Your money stays safe in your wallet until you receive the food!</p>
-                        </div>
-
-                        <div class="infoblock">
-                            <strong>OCR Receipt Matching</strong>
-                            <p>Runners must hand over to you the printed cashier receipt.</p>
-                        </div>
-
-                        <a href="#" class="protocol-link">Read PasaBuy Protocol →</a>
-                    </div>
-                </div>
-
-            </div>
-
-
+    <div class="page">
+      <div class="dashboardcontainer">
+        <div class="topbar">
+          <div>
+            <h1>My Campus Food Orders</h1>
+            <p class="subdescription">
+              Track your posted food requests, monitor accepted deliveries in
+              transit, and manage pending runs looking for student runners.
+            </p>
+          </div>
         </div>
+
+        <div class="statsoverview">
+          <div class="statbox allactive-box">
+            <span class="statlabel">Total Active Orders</span>
+            <h2>3</h2>
+            <p class="statsub">2 on going, 1 pending</p>
+          </div>
+
+          <div class="statbox">
+            <span class="statlabel">Pending Runner Acceptance</span>
+            <h2>1</h2>
+            <p class="statsub">Awaiting peer claim</p>
+          </div>
+
+          <div class="statbox">
+            <span class="statlabel">Accepted & Ongoing</span>
+            <h2>2</h2>
+            <p class="statsub">Runner accepted</p>
+          </div>
+
+          <div class="statbox">
+            <span class="statlabel">Completed This Term</span>
+            <h2>18 <small>Orders</small></h2>
+          </div>
+        </div>
+
+        <div class="filterbar">
+          <div class="filtertabs">
+            <button class="filterbtn active" type="button">All Active</button>
+            <button class="filterbtn" type="button">Pending Runner</button>
+            <button class="filterbtn" type="button">Accepted & Ongoing</button>
+            <button class="filterbtn" type="button">
+              Completed History (18)
+            </button>
+          </div>
+        </div>
+
+        <div class="contentlayout">
+          <div class="mainordercard">
+            <div class="orderstatsheader">
+              <span class="status">Pending Runner Claim</span>
+            </div>
+
+            <div class="orderbodygrid">
+              <div class="orderdetails-left">
+                <h2>SM Muntinlupa - Coco Milktea</h2>
+
+                <div class="itemsbox">
+                  <span class="boxlabel">ORDERED MEAL ITEMS</span>
+                  <h3>
+                    1x Panda Milktea + Add Ons White Pearls<br />
+                    2x Taro Milktea + 50% Sugar
+                  </h3>
+                </div>
+              </div>
+
+              <div class="destinationcard">
+                <span class="destlabel">Destination</span>
+                <strong>PDIC Building Rm 198</strong>
+                <p>Left Wing</p>
+              </div>
+            </div>
+
+            <div class="orderfooter">
+              <div class="totalcost">
+                Total Cost: <span>₱150.00 + Food Cost</span>
+              </div>
+
+              <div class="actionbuttons">
+                <button class="edit-btn" type="button">Edit Request</button>
+                <button class="cancel-btn" type="button">
+                  Cancel Run (Refund)
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="sidebarinfo">
+            <div class="protocolcard">
+              <h3>Campus Protection</h3>
+
+              <div class="infoblock">
+                <strong>Payment Arrives as Order Does</strong>
+                <p>
+                  Your money stays safe in your wallet until you receive the
+                  food!
+                </p>
+              </div>
+
+              <div class="infoblock">
+                <strong>OCR Receipt Matching</strong>
+                <p>
+                  Runners must hand over to you the printed cashier receipt.
+                </p>
+              </div>
+
+              <a href="#" class="protocol-link">Read PasaBuy Protocol →</a>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-
-
-
-
-
-
-
-</body>
+  </body>
 </html>
