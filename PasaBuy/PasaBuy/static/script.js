@@ -14,6 +14,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const roleSelect = document.getElementById("role");
   const graduationGroup = document.querySelector(".graduation");
   const graduationInput = document.getElementById("graduation");
+  const userMenuToggle = document.querySelector(".user-menu-toggle");
+  const accountPanel = document.querySelector(".account-panel");
 
   function updateGraduationField() {
     const isStudent = roleSelect.value === "Student";
@@ -51,27 +53,27 @@ document.addEventListener("DOMContentLoaded", () => {
     signupStepTwo.hidden = step !== 2;
   }
 
-  tabSignUp.addEventListener("click", () => switchTab("signup"));
-  tabLogIn.addEventListener("click", () => switchTab("login"));
+  tabSignUp?.addEventListener("click", () => switchTab("signup"));
+  tabLogIn?.addEventListener("click", () => switchTab("login"));
 
-  signupDetailsForm.addEventListener("submit", (event) => {
+  signupDetailsForm?.addEventListener("submit", (event) => {
     if (!signupDetailsForm.checkValidity()) {
       event.preventDefault();
     }
   });
 
-  backToDetails.addEventListener("click", () => showSignupStep(1));
+  backToDetails?.addEventListener("click", () => showSignupStep(1));
 
-  signupIdForm.addEventListener("submit", (event) => {
+  signupIdForm?.addEventListener("submit", (event) => {
     if (!signupIdForm.checkValidity()) {
       event.preventDefault();
     }
   });
 
-  if (page.dataset.initialView === "signup") {
+  if (page?.dataset.initialView === "signup") {
     switchTab("signup");
     showSignupStep(1);
-  } else if (page.dataset.initialView === "upload") {
+  } else if (page?.dataset.initialView === "upload") {
     switchTab("signup");
     showSignupStep(2);
   }
@@ -82,6 +84,24 @@ document.addEventListener("DOMContentLoaded", () => {
       const type =
         passwordInput.getAttribute("type") === "password" ? "text" : "password";
       passwordInput.setAttribute("type", type);
+    });
+  }
+
+  if (userMenuToggle && accountPanel) {
+    userMenuToggle.addEventListener("click", () => {
+      const isOpen = !accountPanel.hidden;
+      accountPanel.hidden = isOpen;
+      userMenuToggle.setAttribute("aria-expanded", String(!isOpen));
+    });
+
+    document.addEventListener("click", (event) => {
+      if (
+        !userMenuToggle.contains(event.target) &&
+        !accountPanel.contains(event.target)
+      ) {
+        accountPanel.hidden = true;
+        userMenuToggle.setAttribute("aria-expanded", "false");
+      }
     });
   }
 });
