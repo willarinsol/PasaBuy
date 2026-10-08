@@ -10,3 +10,7 @@ def hero_page(request):
 
 def order_page(request):
     return render(request, 'orderpage.html')
+
+
+def user_page(request):
+    return render(request, 'userpage.html')
