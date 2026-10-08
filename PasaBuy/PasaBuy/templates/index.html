@@ -15,7 +15,7 @@
     <header class="header">
       <div class="header-left">
         <img
-          src="{% static 'images/loalogo.jpg' %}"
+          src="{% static 'images/loalogo.png' %}"
           class="loalogo"
           alt="Lyceum of Alabang Logo"
         />
@@ -48,7 +48,19 @@
             </p>
             <div class="protocol">STEP 1 OF 2 · ACCOUNT DETAILS</div>
 
-            <form id="signup-details-form">
+            {% if signup_errors and initial_view != 'upload' %}
+            <div class="form-error" role="alert">
+              {% for error in signup_errors %}
+              <p>{{ error }}</p>
+              {% endfor %}
+            </div>
+            {% endif %}
+            <form
+              id="signup-details-form"
+              method="post"
+              action="{% url 'signup_details' %}"
+            >
+              {% csrf_token %}
               <div class="role-selection">
                 <label for="role">ACCOUNT TYPE</label>
                 <select id="role" name="role">
@@ -84,6 +96,26 @@
                     required
                   />
                 </div>
+                <div class="form-group">
+                  <label for="signup-password">Password *</label>
+                  <input
+                    type="password"
+                    id="signup-password"
+                    name="password"
+                    minlength="8"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="password-confirmation">Confirm Password *</label>
+                  <input
+                    type="password"
+                    id="password-confirmation"
+                    name="password_confirmation"
+                    minlength="8"
+                    required
+                  />
+                </div>
               </div>
 
               <button class="submit-btn" type="submit">
@@ -99,7 +131,20 @@
             </p>
             <div class="protocol">STEP 2 OF 2 · ID VERIFICATION</div>
 
-            <form id="signup-id-form">
+            {% if signup_errors and initial_view == 'upload' %}
+            <div class="form-error" role="alert">
+              {% for error in signup_errors %}
+              <p>{{ error }}</p>
+              {% endfor %}
+            </div>
+            {% endif %}
+            <form
+              id="signup-id-form"
+              method="post"
+              action="{% url 'signup_complete' %}"
+              enctype="multipart/form-data"
+            >
+              {% csrf_token %}
               <div class="id-grid">
                 <div class="id-section">
                   <label for="id-front">Front of Institutional ID *</label>
@@ -130,7 +175,12 @@
               </div>
 
               <label class="affirmation">
-                <input type="checkbox" required />
+                <input
+                  type="checkbox"
+                  name="affirmation"
+                  value="yes"
+                  required
+                />
                 <span>
                   I affirm that this credential belongs to me and represents my
                   current standing at Lyceum of Alabang Inc.
@@ -162,7 +212,16 @@
           <p class="authenticationdescription">
             Log in with your PasaBuy account.
           </p>
-          <form id="login-form" class="login-container">
+          {% if login_error %}
+          <div class="form-error" role="alert">{{ login_error }}</div>
+          {% endif %}
+          <form
+            id="login-form"
+            class="login-container"
+            method="post"
+            action="{% url 'index' %}"
+          >
+            {% csrf_token %}
             <div class="login-field">
               <label for="login-username">USERNAME</label>
               <div class="input-wrapper">

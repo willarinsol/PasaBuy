@@ -55,20 +55,23 @@ document.addEventListener("DOMContentLoaded", () => {
   tabLogIn.addEventListener("click", () => switchTab("login"));
 
   signupDetailsForm.addEventListener("submit", (event) => {
-    event.preventDefault();
-    if (signupDetailsForm.checkValidity()) {
-      showSignupStep(2);
+    if (!signupDetailsForm.checkValidity()) {
+      event.preventDefault();
     }
   });
 
   backToDetails.addEventListener("click", () => showSignupStep(1));
 
   signupIdForm.addEventListener("submit", (event) => {
-    event.preventDefault();
-    signupIdForm.checkValidity();
+    if (!signupIdForm.checkValidity()) {
+      event.preventDefault();
+    }
   });
 
-  if (page.dataset.initialView === "upload") {
+  if (page.dataset.initialView === "signup") {
+    switchTab("signup");
+    showSignupStep(1);
+  } else if (page.dataset.initialView === "upload") {
     switchTab("signup");
     showSignupStep(2);
   }

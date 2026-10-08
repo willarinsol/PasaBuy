@@ -134,6 +134,20 @@ body {
   margin-bottom: 15px;
 }
 
+.form-error {
+  margin: 12px 0;
+  padding: 10px 12px;
+  border-radius: 6px;
+  background: #ffe1e1;
+  color: #9a1c1c;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.form-error p {
+  margin: 0;
+}
+
 .protocol {
   display: inline-block;
   background: #dfe3ff;
