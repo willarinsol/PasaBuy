@@ -5,7 +5,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>PasaBuy - User Authentication</title>
-
     <link
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap"
       rel="stylesheet"
@@ -13,90 +12,240 @@
     <link rel="stylesheet" href="{% static 'style.css' %}" />
   </head>
   <body>
-    <!-- HEADER -->
-    <div class="header">
+    <header class="header">
       <div class="header-left">
         <img
-          src="{% static 'images/loalogo.jpg' %}"
+          src="{% static 'images/loalogo.png' %}"
           class="loalogo"
           alt="Lyceum of Alabang Logo"
         />
         <h2>LYCEUM OF ALABANG</h2>
       </div>
+      {% if request.user.is_authenticated %}
+      <div class="account-menu">
+        <button
+          class="user-menu-toggle"
+          type="button"
+          aria-label="Open account menu"
+          aria-expanded="false"
+        >
+          <span class="user-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <circle cx="12" cy="8" r="3.5"></circle>
+              <path d="M5 20c.8-3.5 3.2-5.5 7-5.5s6.2 2 7 5.5"></path>
+            </svg>
+          </span>
+        </button>
+        <span class="account-name">
+          {{ request.user.get_full_name|default:request.user.username }}
+        </span>
+        <div class="account-panel" hidden>
+          <a href="#">Account Settings</a>
+          <a href="{% url 'logout' %}">Log out</a>
+        </div>
+      </div>
+      {% endif %}
       <h1 class="pasabuy-logo">Pasa<span>Buy</span></h1>
-    </div>
+    </header>
 
-    <!-- MAIN CONTAINER -->
-    <div class="page">
-      <div class="authenticationcard">
-        <!-- TABS SWITCHER -->
-        <div class="tabs">
-          <button class="tab" id="tab-signin" type="button">Sign In</button>
-          <button class="tab active" id="tab-login" type="button">
+    <main class="page" data-initial-view="{{ initial_view|default:'login' }}">
+      <section class="authenticationcard" aria-label="PasaBuy authentication">
+        <div class="tabs" role="tablist" aria-label="Authentication options">
+          <button class="tab" id="tab-signup" type="button" role="tab">
+            Sign Up
+          </button>
+          <button class="tab active" id="tab-login" type="button" role="tab">
             Log In
           </button>
         </div>
 
-        <!-- SIGN IN VIEW (REGISTRATION / PRE-VALIDATION) -->
-        <div id="view-signin" class="view-section">
-          <h1>User Authentication</h1>
+        <section
+          id="view-signup"
+          class="view-section"
+          aria-labelledby="tab-signup"
+        >
+          <div class="signup-step" id="signup-step-1">
+            <h1>Create your PasaBuy account</h1>
+            <p class="authenticationdescription">
+              Start with your campus details, then upload both sides of your
+              institutional ID to complete verification.
+            </p>
+            <div class="protocol">STEP 1 OF 2 · ACCOUNT DETAILS</div>
+
+            {% if signup_errors and initial_view != 'upload' %}
+            <div class="form-error" role="alert">
+              {% for error in signup_errors %}
+              <p>{{ error }}</p>
+              {% endfor %}
+            </div>
+            {% endif %}
+            <form
+              id="signup-details-form"
+              method="post"
+              action="{% url 'signup_details' %}"
+            >
+              {% csrf_token %}
+              <div class="role-selection">
+                <label for="role">ACCOUNT TYPE</label>
+                <select id="role" name="role">
+                  <option>Student</option>
+                  <option>Employee</option>
+                </select>
+              </div>
+
+              <div class="form-grid">
+                <div class="form-group">
+                  <label for="first-name">First Name *</label>
+                  <input
+                    type="text"
+                    id="first-name"
+                    name="first_name"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="last-name">Last Name *</label>
+                  <input type="text" id="last-name" name="last_name" required />
+                </div>
+                <div class="form-group">
+                  <label for="idnumber">Student ID / Employee ID *</label>
+                  <input type="text" id="idnumber" name="idnumber" required />
+                </div>
+                <div class="form-group graduation">
+                  <label for="graduation">Expected Graduation Term *</label>
+                  <input
+                    type="text"
+                    id="graduation"
+                    name="graduation"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="signup-password">Password *</label>
+                  <input
+                    type="password"
+                    id="signup-password"
+                    name="password"
+                    minlength="8"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="password-confirmation">Confirm Password *</label>
+                  <input
+                    type="password"
+                    id="password-confirmation"
+                    name="password_confirmation"
+                    minlength="8"
+                    required
+                  />
+                </div>
+              </div>
+
+              <button class="submit-btn" type="submit">
+                Continue to ID Upload
+              </button>
+            </form>
+          </div>
+
+          <div class="signup-step" id="signup-step-2" hidden>
+            <h1>Upload institutional ID</h1>
+            <p class="authenticationdescription">
+              Provide clear scans of the front and back of your current ID.
+            </p>
+            <div class="protocol">STEP 2 OF 2 · ID VERIFICATION</div>
+
+            {% if signup_errors and initial_view == 'upload' %}
+            <div class="form-error" role="alert">
+              {% for error in signup_errors %}
+              <p>{{ error }}</p>
+              {% endfor %}
+            </div>
+            {% endif %}
+            <form
+              id="signup-id-form"
+              method="post"
+              action="{% url 'signup_complete' %}"
+              enctype="multipart/form-data"
+            >
+              {% csrf_token %}
+              <div class="id-grid">
+                <div class="id-section">
+                  <label for="id-front">Front of Institutional ID *</label>
+                  <div class="upload-box">
+                    <p>Choose the front of your ID</p>
+                    <input
+                      type="file"
+                      id="id-front"
+                      name="id_front"
+                      accept="image/*"
+                      required
+                    />
+                  </div>
+                </div>
+                <div class="id-section">
+                  <label for="id-back">Back of Institutional ID *</label>
+                  <div class="upload-box">
+                    <p>Choose the back of your ID</p>
+                    <input
+                      type="file"
+                      id="id-back"
+                      name="id_back"
+                      accept="image/*"
+                      required
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <label class="affirmation">
+                <input
+                  type="checkbox"
+                  name="affirmation"
+                  value="yes"
+                  required
+                />
+                <span>
+                  I affirm that this credential belongs to me and represents my
+                  current standing at Lyceum of Alabang Inc.
+                </span>
+              </label>
+
+              <div class="step-actions">
+                <button
+                  class="secondary-btn"
+                  id="back-to-details"
+                  type="button"
+                >
+                  Back
+                </button>
+                <button class="submit-btn" type="submit">
+                  Submit for Verification
+                </button>
+              </div>
+            </form>
+          </div>
+        </section>
+
+        <section
+          id="view-login"
+          class="view-section active"
+          aria-labelledby="tab-login"
+        >
+          <h1>Welcome back</h1>
           <p class="authenticationdescription">
-            Institutional security requires pre-validation of an active academic
-            or enterprise credential prior to user profile instantiation.
+            Log in with your PasaBuy account.
           </p>
-
-          <div class="protocol">◉ MANDATORY ACCESS PROTOCOL</div>
-
-          <form>
-            <div class="role-selection">
-              <select id="role" name="role">
-                <option>Student</option>
-                <option>Employee</option>
-              </select>
-            </div>
-
-            <div class="form-grid">
-              <div class="form-group">
-                <label for="first-name">First Name *</label>
-                <input type="text" id="first-name" name="first_name" required />
-              </div>
-
-              <div class="form-group">
-                <label for="last-name">Last Name *</label>
-                <input type="text" id="last-name" name="last_name" required />
-              </div>
-
-              <div class="form-group">
-                <label for="idnumber">Student ID / Employee ID *</label>
-                <input type="text" id="idnumber" name="idnumber" required />
-              </div>
-
-              <div class="form-group graduation">
-                <label for="graduation">Expected Graduation Term *</label>
-                <input type="text" id="graduation" name="graduation" required />
-              </div>
-            </div>
-
-            <label class="affirmation">
-              <input type="checkbox" required />
-              <div>
-                I solemnly affirm that this card credential belongs directly to
-                me, is legally unaltered, and represents my current standing at
-                Lyceum of Alabang Inc. Submitting fraudulent credentials invokes
-                institutional disciplinary sanction and immediate revocation of
-                PasaBuy portal credentials.
-              </div>
-            </label>
-
-            <button class="submit-btn" type="submit">
-              Submit for Verification
-            </button>
-          </form>
-        </div>
-
-        <!-- LOG IN VIEW -->
-        <div id="view-login" class="view-section active">
-          <form class="login-container">
+          {% if login_error %}
+          <div class="form-error" role="alert">{{ login_error }}</div>
+          {% endif %}
+          <form
+            id="login-form"
+            class="login-container"
+            method="post"
+            action="{% url 'index' %}"
+          >
+            {% csrf_token %}
             <div class="login-field">
               <label for="login-username">USERNAME</label>
               <div class="input-wrapper">
@@ -124,7 +273,7 @@
                   id="toggle-password-btn"
                   aria-label="Toggle Password Visibility"
                 >
-                  <svg id="eye-icon" viewBox="0 0 24 24">
+                  <svg id="eye-icon" viewBox="0 0 24 24" aria-hidden="true">
                     <path
                       d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"
                     ></path>
@@ -136,9 +285,9 @@
 
             <button class="login-btn" type="submit">Log in</button>
           </form>
-        </div>
-      </div>
-    </div>
+        </section>
+      </section>
+    </main>
 
     <script src="{% static 'script.js' %}"></script>
   </body>

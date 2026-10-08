@@ -1,293 +1,181 @@
+{% load static %}
 <html>
-<head>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="browser.css">
+  <head>
+    <link rel="stylesheet" href="{% static 'style.css' %}" />
+    <link rel="stylesheet" href="{% static 'browser.css' %}" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
     <title>Browser</title>
-</head>
-<body>
-    
-    <div class = "header">
-        <img src="loalogo.png" class="loalogo">
-        <h1>PasaBuy</h1>
-    </div>
-
-    <div class = "page">
-        <div class = "boardcard">
-            <h1>Live Campus Food Run & Request Board</h1>
-            <p class="boarddescription">
-                Authorized users may review active food requests, claim available delivery
-                assignments, and facilitate campus-based food transfers between verified users.
-            </p>
-
-            <div class="orders-grid">
-
-                <div class="order-card">
-                    <div class="card-meta">
-                        <span class="due-tag">⏱ Due by 1:30 PM</span>
-                        <span class="price-tag">₱ 150 tip + <small>(FOOD COST)</small></span>
-                    </div>
-
-                    <h2>Jollibee 2-pc Chickenjoy & Peach Mango Pie — PDIC Bldg</h2>
-                    
-                    <p class="order-details">
-                        Authorized food request for 2-pc Chickenjoy with rice, large pineapple
-                        juice, and Peach Mango Pie from the Gate 2 branch. Delivery destination:
-                        Science Bldg, Room 304.
-                    </p><br>
-
-                    <div class="user-info">
-                        <div class="user">AR</div>
-                        <div class="profile">
-                            <strong>Will Diether A.</strong>
-                            <p>VERIFIED ID</p>
-                        </div>
-                        <div class="rating">★ 4.9 (32)</div>
-                    </div>
-
-                    <button class="accept-btn" type="button">Claim Food Run</button>
-                </div>
-
-                <div class="order-card">
-                    <div class="card-meta">
-                        <span class="due-tag">⏱ Due by 1:30 PM</span>
-                        <span class="price-tag">₱ 150 tip + <small>(FOOD COST)</small></span>
-                    </div>
-
-                    <h2>Jollibee 2-pc Chickenjoy & Peach Mango Pie — PDIC Bldg</h2>
-                    
-                    <p class="order-details">
-                        Authorized food request for 2-pc Chickenjoy with rice, large pineapple
-                        juice, and Peach Mango Pie from the Gate 2 branch. Delivery destination:
-                        Science Bldg, Room 304.
-                    </p><br>
-
-                    <div class="user-info">
-                        <div class="user">AR</div>
-                        <div class="profile">
-                            <strong>Will Diether A.</strong>
-                            <p>VERIFIED ID</p>
-                        </div>
-                        <div class="rating">★ 4.9 (32)</div>
-                    </div>
-
-                    <button class="accept-btn" type="button">Claim Food Run</button>
-                </div>
-
-                <div class="order-card">
-                    <div class="card-meta">
-                        <span class="due-tag">⏱ Due by 1:30 PM</span>
-                        <span class="price-tag">₱ 150 tip + <small>(FOOD COST)</small></span>
-                    </div>
-
-                    <h2>Jollibee 2-pc Chickenjoy & Peach Mango Pie — PDIC Bldg</h2>
-                    
-                    <p class="order-details">
-                        Authorized food request for 2-pc Chickenjoy with rice, large pineapple
-                        juice, and Peach Mango Pie from the Gate 2 branch. Delivery destination:
-                        Science Bldg, Room 304.
-                    </p><br>
-
-                    <div class="user-info">
-                        <div class="user">AR</div>
-                        <div class="profile">
-                            <strong>Will Diether A.</strong>
-                            <p>VERIFIED ID</p>
-                        </div>
-                        <div class="rating">★ 4.9 (32)</div>
-                    </div>
-
-                    <button class="accept-btn" type="button">Claim Food Run</button>
-                </div>
-
-                <div class="order-card">
-                    <div class="card-meta">
-                        <span class="due-tag">⏱ Due by 1:30 PM</span>
-                        <span class="price-tag">₱ 150 tip + <small>(FOOD COST)</small></span>
-                    </div>
-
-                    <h2>Jollibee 2-pc Chickenjoy & Peach Mango Pie — PDIC Bldg</h2>
-                    
-                    <p class="order-details">
-                        Authorized food request for 2-pc Chickenjoy with rice, large pineapple
-                        juice, and Peach Mango Pie from the Gate 2 branch. Delivery destination:
-                        Science Bldg, Room 304.
-                    </p><br>
-
-                    <div class="user-info">
-                        <div class="user">AR</div>
-                        <div class="profile">
-                            <strong>Will Diether A.</strong>
-                            <p>VERIFIED ID</p>
-                        </div>
-                        <div class="rating">★ 4.9 (32)</div>
-                    </div>
-
-                    <button class="accept-btn" type="button">Claim Food Run</button>
-                </div>
-
-
-                <div class="order-card">
-                    <div class="card-meta">
-                        <span class="due-tag">⏱ Due by 1:30 PM</span>
-                        <span class="price-tag">₱ 150 tip + <small>(FOOD COST)</small></span>
-                    </div>
-
-                    <h2>Jollibee 2-pc Chickenjoy & Peach Mango Pie — PDIC Bldg</h2>
-                    
-                    <p class="order-details">
-                        Authorized food request for 2-pc Chickenjoy with rice, large pineapple
-                        juice, and Peach Mango Pie from the Gate 2 branch. Delivery destination:
-                        Science Bldg, Room 304.
-                    </p><br>
-
-                    <div class="user-info">
-                        <div class="user">AR</div>
-                        <div class="profile">
-                            <strong>Will Diether A.</strong>
-                            <p>VERIFIED ID</p>
-                        </div>
-                        <div class="rating">★ 4.9 (32)</div>
-                    </div>
-
-                    <button class="accept-btn" type="button">Claim Food Run</button>
-                </div>
-
-
-                <div class="order-card">
-                    <div class="card-meta">
-                        <span class="due-tag">⏱ Due by 1:30 PM</span>
-                        <span class="price-tag">₱ 150 tip + <small>(FOOD COST)</small></span>
-                    </div>
-
-                    <h2>Jollibee 2-pc Chickenjoy & Peach Mango Pie — PDIC Bldg</h2>
-                    
-                    <p class="order-details">
-                        Authorized food request for 2-pc Chickenjoy with rice, large pineapple
-                        juice, and Peach Mango Pie from the Gate 2 branch. Delivery destination:
-                        Science Bldg, Room 304.
-                    </p><br>
-
-                    <div class="user-info">
-                        <div class="user">AR</div>
-                        <div class="profile">
-                            <strong>Will Diether A.</strong>
-                            <p>VERIFIED ID</p>
-                        </div>
-                        <div class="rating">★ 4.9 (32)</div>
-                    </div>
-
-                    <button class="accept-btn" type="button">Claim Food Run</button>
-                </div>
-
-                <div class="order-card">
-                    <div class="card-meta">
-                        <span class="due-tag">⏱ Due by 1:30 PM</span>
-                        <span class="price-tag">₱ 150 tip + <small>(FOOD COST)</small></span>
-                    </div>
-
-                    <h2>Jollibee 2-pc Chickenjoy & Peach Mango Pie — PDIC Bldg</h2>
-                    
-                    <p class="order-details">
-                        Authorized food request for 2-pc Chickenjoy with rice, large pineapple
-                        juice, and Peach Mango Pie from the Gate 2 branch. Delivery destination:
-                        Science Bldg, Room 304.
-                    </p><br>
-
-                    <div class="user-info">
-                        <div class="user">AR</div>
-                        <div class="profile">
-                            <strong>Will Diether A.</strong>
-                            <p>VERIFIED ID</p>
-                        </div>
-                        <div class="rating">★ 4.9 (32)</div>
-                    </div>
-
-                    <button class="accept-btn" type="button">Claim Food Run</button>
-                </div>
-
-                <div class="order-card">
-                    <div class="card-meta">
-                        <span class="due-tag">⏱ Due by 1:30 PM</span>
-                        <span class="price-tag">₱ 150 tip + <small>(FOOD COST)</small></span>
-                    </div>
-
-                    <h2>Jollibee 2-pc Chickenjoy & Peach Mango Pie — PDIC Bldg</h2>
-                    
-                    <p class="order-details">
-                        Authorized food request for 2-pc Chickenjoy with rice, large pineapple
-                        juice, and Peach Mango Pie from the Gate 2 branch. Delivery destination:
-                        Science Bldg, Room 304.
-                    </p><br>
-
-                    <div class="user-info">
-                        <div class="user">AR</div>
-                        <div class="profile">
-                            <strong>Will Diether A.</strong>
-                            <p>VERIFIED ID</p>
-                        </div>
-                        <div class="rating">★ 4.9 (32)</div>
-                    </div>
-
-                    <button class="accept-btn" type="button">Claim Food Run</button>
-                </div>
-
-                <div class="order-card">
-                    <div class="card-meta">
-                        <span class="due-tag">⏱ Due by 1:30 PM</span>
-                        <span class="price-tag">₱ 150 tip + <small>(FOOD COST)</small></span>
-                    </div>
-
-                    <h2>Jollibee 2-pc Chickenjoy & Peach Mango Pie — PDIC Bldg</h2>
-                    
-                    <p class="order-details">
-                        Authorized food request for 2-pc Chickenjoy with rice, large pineapple
-                        juice, and Peach Mango Pie from the Gate 2 branch. Delivery destination:
-                        Science Bldg, Room 304.
-                    </p><br>
-
-                    <div class="user-info">
-                        <div class="user">AR</div>
-                        <div class="profile">
-                            <strong>Will Diether A.</strong>
-                            <p>VERIFIED ID</p>
-                        </div>
-                        <div class="rating">★ 4.9 (32)</div>
-                    </div>
-
-                    <button class="accept-btn" type="button">Claim Food Run</button>
-                </div>
-
-                <div class="order-card">
-                    <div class="card-meta">
-                        <span class="due-tag">⏱ Due by 1:30 PM</span>
-                        <span class="price-tag">₱ 150 tip + <small>(FOOD COST)</small></span>
-                    </div>
-
-                    <h2>Jollibee 2-pc Chickenjoy & Peach Mango Pie — PDIC Bldg</h2>
-                    
-                    <p class="order-details">
-                        Authorized food request for 2-pc Chickenjoy with rice, large pineapple
-                        juice, and Peach Mango Pie from the Gate 2 branch. Delivery destination:
-                        Science Bldg, Room 304.
-                    </p><br>
-
-                    <div class="user-info">
-                        <div class="user">AR</div>
-                        <div class="profile">
-                            <strong>Will Diether A.</strong>
-                            <p>VERIFIED ID</p>
-                        </div>
-                        <div class="rating">★ 4.9 (32)</div>
-                    </div>
-
-                    <button class="accept-btn" type="button">Claim Food Run</button>
-                </div>
-
-                    
-
-            </div>
+  </head>
+  <body>
+    <header class="header">
+      <div class="header-left">
+        <img
+          src="{% static 'images/loalogo.png' %}"
+          class="loalogo"
+          alt="Lyceum of Alabang Logo"
+        />
+        <h2>LYCEUM OF ALABANG</h2>
+      </div>
+      {% if request.user.is_authenticated %}    
+      <div class="account-menu">
+        <button
+          class="user-menu-toggle"
+          type="button"
+          aria-label="Open account menu"
+          aria-expanded="false"
+        >
+          <span class="user-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <circle cx="12" cy="8" r="3.5"></circle>
+              <path d="M5 20c.8-3.5 3.2-5.5 7-5.5s6.2 2 7 5.5"></path>
+            </svg>
+          </span>
+        </button>
+        <span class="account-name">
+          {{ request.user.get_full_name|default:request.user.username }}
+        </span>
+        <div class="account-panel" hidden>
+          <a href="#">Account Settings</a>
+          <a href="{% url 'logout' %}">Log out</a>
         </div>
-    </div>
+      </div>
+      {% endif %}
+      <h1 class="pasabuy-logo">Pasa<span>Buy</span></h1>
+    </header>
 
-</body>
+    <div class="page">
+      <div class="boardcard">
+        <h1>Live Campus Food Run & Request Board</h1>
+        <p class="boarddescription">
+          Authorized users may review active food requests, claim available
+          delivery assignments, and facilitate campus-based food transfers
+          between verified users.
+        </p>
+
+        <div class="orders-grid">
+          <div class="order-card">
+            <div class="card-meta">
+              <span class="due-tag">⏱ Due by 1:30 PM</span>
+              <span class="price-tag"
+                >₱ 150 tip + <small>(FOOD COST)</small></span
+              >
+            </div>
+
+            <h2>Jollibee 2-pc Chickenjoy & Peach Mango Pie — PDIC Bldg</h2>
+
+            <p class="order-details">
+              Authorized food request for 2-pc Chickenjoy with rice, large
+              pineapple juice, and Peach Mango Pie from the Gate 2 branch.
+              Delivery destination: Science Bldg, Room 304.
+            </p>
+            <br />
+
+            <div class="user-info">
+              <div class="user">AR</div>
+              <div class="profile">
+                <strong>Will Diether A.</strong>
+                <p>VERIFIED ID</p>
+              </div>
+              <div class="rating">★ 4.9 (32)</div>
+            </div>
+
+            <button class="accept-btn" type="button">Claim Food Run</button>
+          </div>
+
+          <div class="order-card">
+            <div class="card-meta">
+              <span class="due-tag">⏱ Due by 1:30 PM</span>
+              <span class="price-tag"
+                >₱ 150 tip + <small>(FOOD COST)</small></span
+              >
+            </div>
+
+            <h2>Jollibee 2-pc Chickenjoy & Peach Mango Pie — PDIC Bldg</h2>
+
+            <p class="order-details">
+              Authorized food request for 2-pc Chickenjoy with rice, large
+              pineapple juice, and Peach Mango Pie from the Gate 2 branch.
+              Delivery destination: Science Bldg, Room 304.
+            </p>
+            <br />
+
+            <div class="user-info">
+              <div class="user">AR</div>
+              <div class="profile">
+                <strong>Will Diether A.</strong>
+                <p>VERIFIED ID</p>
+              </div>
+              <div class="rating">★ 4.9 (32)</div>
+            </div>
+
+            <button class="accept-btn" type="button">Claim Food Run</button>
+          </div>
+
+          <div class="order-card">
+            <div class="card-meta">
+              <span class="due-tag">⏱ Due by 1:30 PM</span>
+              <span class="price-tag"
+                >₱ 150 tip + <small>(FOOD COST)</small></span
+              >
+            </div>
+
+            <h2>Jollibee 2-pc Chickenjoy & Peach Mango Pie — PDIC Bldg</h2>
+
+            <p class="order-details">
+              Authorized food request for 2-pc Chickenjoy with rice, large
+              pineapple juice, and Peach Mango Pie from the Gate 2 branch.
+              Delivery destination: Science Bldg, Room 304.
+            </p>
+            <br />
+
+            <div class="user-info">
+              <div class="user">AR</div>
+              <div class="profile">
+                <strong>Will Diether A.</strong>
+                <p>VERIFIED ID</p>
+              </div>
+              <div class="rating">★ 4.9 (32)</div>
+            </div>
+
+            <button class="accept-btn" type="button">Claim Food Run</button>
+          </div>
+
+          <div class="order-card">
+            <div class="card-meta">
+              <span class="due-tag">⏱ Due by 1:30 PM</span>
+              <span class="price-tag"
+                >₱ 150 tip + <small>(FOOD COST)</small></span
+              >
+            </div>
+
+            <h2>Jollibee 2-pc Chickenjoy & Peach Mango Pie — PDIC Bldg</h2>
+
+            <p class="order-details">
+              Authorized food request for 2-pc Chickenjoy with rice, large
+              pineapple juice, and Peach Mango Pie from the Gate 2 branch.
+              Delivery destination: Science Bldg, Room 304.
+            </p>
+            <br />
+
+            <div class="user-info">
+              <div class="user">AR</div>
+              <div class="profile">
+                <strong>Will Diether A.</strong>
+                <p>VERIFIED ID</p>
+              </div>
+              <div class="rating">★ 4.9 (32)</div>
+            </div>
+
+            <button class="accept-btn" type="button">Claim Food Run</button>
+          </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="{% static 'script.js' %}"></script>
+  </body>
 </html>
