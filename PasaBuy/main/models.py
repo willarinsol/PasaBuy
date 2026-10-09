@@ -20,3 +20,51 @@ class UserProfile(models.Model):
 
 	def __str__(self):
 		return self.user.get_full_name() or self.user.username
+
+
+class FoodOrder(models.Model):
+	STATUS_POSTED = "posted"
+	STATUS_CLAIMED = "claimed"
+	STATUS_COMPLETED = "completed"
+	STATUS_CANCELLED = "cancelled"
+	STATUS_CHOICES = [
+		(STATUS_POSTED, "Posted"),
+		(STATUS_CLAIMED, "Claimed"),
+		(STATUS_COMPLETED, "Completed"),
+		(STATUS_CANCELLED, "Cancelled"),
+	]
+
+	poster = models.ForeignKey(
+		settings.AUTH_USER_MODEL,
+		on_delete=models.CASCADE,
+		related_name="food_orders",
+	)
+	poster_name = models.CharField(max_length=150)
+	student_id = models.CharField(max_length=50)
+	target_store = models.CharField(max_length=200)
+	delivery_location = models.CharField(max_length=200)
+	due_time = models.TimeField()
+	description = models.TextField(blank=True)
+	tip = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+	status = models.CharField(
+		max_length=20,
+		choices=STATUS_CHOICES,
+		default=STATUS_POSTED,
+	)
+	posted_at = models.DateTimeField(auto_now_add=True)
+
+	def __str__(self):
+		return f"{self.target_store} for {self.poster_name}"
+
+
+class FoodOrderItem(models.Model):
+	order = models.ForeignKey(
+		FoodOrder,
+		on_delete=models.CASCADE,
+		related_name="items",
+	)
+	name = models.CharField(max_length=255)
+	quantity = models.PositiveIntegerField(default=1)
+
+	def __str__(self):
+		return f"{self.quantity}x {self.name}"

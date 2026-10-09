@@ -16,6 +16,7 @@
     {% include "includes/site_header.html" with show_post=True %}
 
     <main>
+      {% csrf_token %}
       <section id="formView">
         <h1>Post a PasaBuy Food Run</h1>
         <p class="sub">
@@ -69,7 +70,10 @@
                   class="f-line"
                   id="fName"
                   aria-label="Your name"
+                  value="{{ poster_name }}"
                   placeholder="e.g. Juan Dela Cruz"
+                  readonly
+                  required
                 />
               </div>
               <div class="tgt-row">
@@ -78,7 +82,10 @@
                   class="f-line"
                   id="fSid"
                   aria-label="Student ID"
+                  value="{{ student_id }}"
                   placeholder="e.g. 1221-25"
+                  readonly
+                  required
                 />
               </div>
               <div class="ask">Whats your Order?</div>

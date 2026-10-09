@@ -1,3 +1,7 @@
+import json
+from datetime import datetime
+from decimal import Decimal, InvalidOperation
+
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
@@ -5,9 +9,10 @@ from django.contrib.auth.password_validation import validate_password
 from django.db import IntegrityError, transaction
 from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ValidationError
+from django.http import JsonResponse
 from django.shortcuts import redirect, render
 
-from .models import UserProfile
+from .models import FoodOrder, FoodOrderItem, UserProfile
 
 def index(request):
     if request.method == "POST":
@@ -128,7 +133,17 @@ def hero_page(request):
 
 
 def browser(request):
-    return render(request, "browser.html")
+    orders = FoodOrder.objects.filter(
+        status=FoodOrder.STATUS_POSTED,
+    ).prefetch_related("items").order_by("-posted_at")
+    if request.user.is_authenticated:
+        orders = orders.exclude(poster=request.user)
+    orders = list(orders)
+    for order in orders:
+        order.item_summary = ", ".join(
+            f"{item.quantity}x {item.name}" for item in order.items.all()
+        )
+    return render(request, "browser.html", {"orders": orders})
 
 
 def my_orders(request):
@@ -136,7 +151,80 @@ def my_orders(request):
 
 
 def order_page(request):
-    return render(request, "orderpage.html")
+    profile = getattr(request.user, "userprofile", None)
+    account_name = request.user.get_full_name() if request.user.is_authenticated else ""
+    account_id = profile.institutional_id if profile else ""
+
+    if request.method == "POST":
+        if not request.user.is_authenticated:
+            return JsonResponse({"error": "Log in before posting a PasaBuy."}, status=401)
+
+        try:
+            payload = json.loads(request.body)
+            due_time = datetime.strptime(payload.get("dueInput", ""), "%H:%M").time()
+            tip = Decimal(str(payload.get("tip", 0)))
+        except (json.JSONDecodeError, TypeError, ValueError, InvalidOperation):
+            return JsonResponse({"error": "Enter a valid due time and tip amount."}, status=400)
+
+        poster_name = str(payload.get("posterName", "")).strip() or account_name.strip()
+        student_id = str(payload.get("posterSid", "")).strip() or account_id
+        target_store = str(payload.get("target", "")).strip()
+        delivery_location = str(payload.get("deliver", "")).strip()
+        description = str(payload.get("desc", "")).strip()
+        raw_items = payload.get("items", [])
+
+        if not poster_name or not student_id:
+            return JsonResponse({"error": "Your name and student ID are required."}, status=400)
+        if not target_store or not delivery_location or not isinstance(raw_items, list) or not raw_items:
+            return JsonResponse({"error": "Complete the store, delivery location, and order items."}, status=400)
+        if tip < 0:
+            return JsonResponse({"error": "The tip cannot be negative."}, status=400)
+
+        try:
+            with transaction.atomic():
+                order = FoodOrder.objects.create(
+                    poster=request.user,
+                    poster_name=poster_name,
+                    student_id=student_id,
+                    target_store=target_store,
+                    delivery_location=delivery_location,
+                    due_time=due_time,
+                    description=description,
+                    tip=tip,
+                )
+                for item in raw_items:
+                    item_name = str(item.get("name", "")).strip()
+                    quantity = int(item.get("qty", 1))
+                    if not item_name or quantity < 1:
+                        raise ValueError
+                    FoodOrderItem.objects.create(
+                        order=order,
+                        name=item_name,
+                        quantity=quantity,
+                    )
+        except (TypeError, ValueError):
+            return JsonResponse({"error": "Each order item needs a name and valid quantity."}, status=400)
+
+        return JsonResponse({
+            "id": order.id,
+            "posterName": order.poster_name,
+            "posterSid": order.student_id,
+            "target": order.target_store,
+            "deliver": order.delivery_location,
+            "items": [
+                {"name": item.name, "qty": item.quantity}
+                for item in order.items.all()
+            ],
+            "desc": order.description,
+            "tip": str(order.tip),
+            "due": order.due_time.strftime("%I:%M %p").lstrip("0"),
+            "posted": order.posted_at.strftime("%I:%M %p").lstrip("0"),
+        }, status=201)
+
+    return render(request, "orderpage.html", {
+        "poster_name": account_name,
+        "student_id": account_id,
+    })
 
 
 def user_page(request):

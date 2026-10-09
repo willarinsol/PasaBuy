@@ -1,6 +1,9 @@
 {% load static %}
-<html>
+<!doctype html>
+<html lang="en">
   <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="{% static 'common.css' %}" />
     <link rel="stylesheet" href="{% static 'browser.css' %}" />
     <link
@@ -12,9 +15,9 @@
   <body>
     {% include "includes/site_header.html" with show_post=True %}
 
-    <div class="page">
-      <div class="boardcard">
-        <h1>Live Campus Food Run & Request Board</h1>
+    <main class="page">
+      <section class="boardcard">
+        <h1>Live Campus Food Run &amp; Request Board</h1>
         <p class="boarddescription">
           Authorized users may review active food requests, claim available
           delivery assignments, and facilitate campus-based food transfers
@@ -22,126 +25,45 @@
         </p>
 
         <div class="orders-grid">
-          <div class="order-card">
+          {% for order in orders %}
+          <article class="order-card">
             <div class="card-meta">
-              <span class="due-tag">⏱ Due by 1:30 PM</span>
-              <span class="price-tag"
-                >₱ 150 tip + <small>(FOOD COST)</small></span
+              <span class="due-tag"
+                >Due by {{ order.due_time|time:"g:i A" }}</span
               >
+              <span class="price-tag">
+                ₱ {{ order.tip|floatformat:2 }} tip + <small>(FOOD COST)</small>
+              </span>
             </div>
-
-            <h2>Jollibee 2-pc Chickenjoy & Peach Mango Pie — PDIC Bldg</h2>
-
+            <h2>
+              {{ order.target_store }} &mdash; {{ order.delivery_location }}
+            </h2>
             <p class="order-details">
-              Authorized food request for 2-pc Chickenjoy with rice, large
-              pineapple juice, and Peach Mango Pie from the Gate 2 branch.
-              Delivery destination: Science Bldg, Room 304.
+              {{ order.item_summary }}<br />{{ order.description }}
             </p>
-            <br />
 
             <div class="user-info">
-              <div class="user">AR</div>
+              <div class="user">{{ order.poster_name|slice:":2"|upper }}</div>
               <div class="profile">
-                <strong>Will Diether A.</strong>
-                <p>VERIFIED ID</p>
+                <strong>{{ order.poster_name }}</strong>
+                <p>VERIFIED ID &middot; {{ order.student_id }}</p>
               </div>
-              <div class="rating">★ 4.9 (32)</div>
             </div>
-
-            <button class="accept-btn" type="button">Claim Food Run</button>
-          </div>
-
-          <div class="order-card">
-            <div class="card-meta">
-              <span class="due-tag">⏱ Due by 1:30 PM</span>
-              <span class="price-tag"
-                >₱ 150 tip + <small>(FOOD COST)</small></span
-              >
-            </div>
-
-            <h2>Jollibee 2-pc Chickenjoy & Peach Mango Pie — PDIC Bldg</h2>
-
-            <p class="order-details">
-              Authorized food request for 2-pc Chickenjoy with rice, large
-              pineapple juice, and Peach Mango Pie from the Gate 2 branch.
-              Delivery destination: Science Bldg, Room 304.
-            </p>
-            <br />
-
-            <div class="user-info">
-              <div class="user">AR</div>
-              <div class="profile">
-                <strong>Will Diether A.</strong>
-                <p>VERIFIED ID</p>
-              </div>
-              <div class="rating">★ 4.9 (32)</div>
-            </div>
-
-            <button class="accept-btn" type="button">Claim Food Run</button>
-          </div>
-
-          <div class="order-card">
-            <div class="card-meta">
-              <span class="due-tag">⏱ Due by 1:30 PM</span>
-              <span class="price-tag"
-                >₱ 150 tip + <small>(FOOD COST)</small></span
-              >
-            </div>
-
-            <h2>Jollibee 2-pc Chickenjoy & Peach Mango Pie — PDIC Bldg</h2>
-
-            <p class="order-details">
-              Authorized food request for 2-pc Chickenjoy with rice, large
-              pineapple juice, and Peach Mango Pie from the Gate 2 branch.
-              Delivery destination: Science Bldg, Room 304.
-            </p>
-            <br />
-
-            <div class="user-info">
-              <div class="user">AR</div>
-              <div class="profile">
-                <strong>Will Diether A.</strong>
-                <p>VERIFIED ID</p>
-              </div>
-              <div class="rating">★ 4.9 (32)</div>
-            </div>
-
-            <button class="accept-btn" type="button">Claim Food Run</button>
-          </div>
-
-          <div class="order-card">
-            <div class="card-meta">
-              <span class="due-tag">⏱ Due by 1:30 PM</span>
-              <span class="price-tag"
-                >₱ 150 tip + <small>(FOOD COST)</small></span
-              >
-            </div>
-
-            <h2>Jollibee 2-pc Chickenjoy & Peach Mango Pie — PDIC Bldg</h2>
-
-            <p class="order-details">
-              Authorized food request for 2-pc Chickenjoy with rice, large
-              pineapple juice, and Peach Mango Pie from the Gate 2 branch.
-              Delivery destination: Science Bldg, Room 304.
-            </p>
-            <br />
-
-            <div class="user-info">
-              <div class="user">AR</div>
-              <div class="profile">
-                <strong>Will Diether A.</strong>
-                <p>VERIFIED ID</p>
-              </div>
-              <div class="rating">★ 4.9 (32)</div>
-            </div>
-
-            <button class="accept-btn" type="button">Claim Food Run</button>
-          </div>
-
-          </div>
+            <button
+              class="accept-btn"
+              type="button"
+              data-order-id="{{ order.id }}"
+            >
+              Claim Food Run
+            </button>
+          </article>
+          {% empty %}
+          <p class="empty-orders">No active food runs from other users yet.</p>
+          {% endfor %}
         </div>
-      </div>
-    </div>
+      </section>
+    </main>
+
     <script src="{% static 'script.js' %}"></script>
   </body>
 </html>

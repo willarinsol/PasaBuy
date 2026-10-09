@@ -431,17 +431,26 @@ h2 {
 
 /* ---------- Form inputs ---------- */
 .f-line {
-  border: 0;
-  border-bottom: 1px solid #444;
-  background: transparent;
-  font-size: 12px;
-  padding: 0 2px;
+  border: 1px solid #cfd5e3;
+  border-radius: 8px;
+  background: #fff;
+  font-size: 15px;
+  min-height: 40px;
+  padding: 7px 11px;
   outline: none;
   min-width: 0;
 }
 
 .f-line:focus {
-  border-bottom-color: var(--blue);
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(32, 56, 255, 0.12);
+}
+
+.f-line[readonly] {
+  border-color: #c9d4f4;
+  background: #f2f5ff;
+  color: #334273;
+  cursor: not-allowed;
 }
 
 .pill .f-line {
@@ -453,16 +462,18 @@ h2 {
 }
 
 .tgt-row {
-  display: flex;
+  display: grid;
+  grid-template-columns: 105px minmax(0, 1fr);
   align-items: center;
-  gap: 6px;
-  font-size: 12px;
+  gap: 12px;
+  font-size: 14px;
   color: #444;
-  margin-top: 6px;
+  margin-top: 10px;
 }
 
 .tgt-row .f-line {
-  width: 200px;
+  width: 100%;
+  max-width: 420px;
 }
 
 .ask {

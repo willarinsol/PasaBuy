@@ -1,145 +1,138 @@
 .boardcard {
-    width: 175vh;
-    max-width: 95vw;
-    margin: 20px auto;
-    background: transparent;
-    padding: 20px;
+  width: min(1200px, 95vw);
+  max-width: 100%;
+  margin: 20px auto;
+  background: transparent;
+  padding: 20px;
 }
-
 
 .boardcard h1 {
-    font-size: 40px;
-    margin-bottom: 0;
+  font-size: 40px;
+  margin-bottom: 0;
 }
-
 
 .boarddescription {
-    color: #6c758b;
-    font-size: 15px;
-    line-height: 1.5;
-    margin-top: 10px;
-    margin-bottom: 25px;
+  color: #6c758b;
+  font-size: 15px;
+  line-height: 1.5;
+  margin-top: 10px;
+  margin-bottom: 25px;
 }
-
 
 .orders-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    gap: 25px;
-    justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 25px;
+  justify-content: center;
 }
-
 
 .order-card {
-    border: 1px solid #dce2ee;
-    border-radius: 8px;
-    background: #fafbff;
-    padding: 12px;
-    height: 46vh;
-    width: 40vh;
+  border: 1px solid #dce2ee;
+  border-radius: 8px;
+  background: #fafbff;
+  padding: 12px;
+  min-height: 300px;
+  width: auto;
 }
-
 
 .card-meta {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
 }
-
 
 .due-tag {
-    background: #c4d1ec;
-    color: #1766df;
-    border-radius: 5px;
-    padding: 5px 5px;
-    font-size: 10px;
-    font-weight: 600;
-
+  background: #c4d1ec;
+  color: #1766df;
+  border-radius: 5px;
+  padding: 5px 5px;
+  font-size: 10px;
+  font-weight: 600;
 }
-
 
 .price-tag {
-    color: red;
-    font-size: 12px;
-    font-weight: 600;
+  color: red;
+  font-size: 12px;
+  font-weight: 600;
 }
-
 
 .price-tag small {
-    color: #8a93a7;
-    font-size: 9px;
-    font-weight: 450;
+  color: #8a93a7;
+  font-size: 9px;
+  font-weight: 450;
 }
-
 
 .order-card h2 {
-    font-size: 20px;
-    margin-bottom: 5px;
-    margin-top: 5px;
+  font-size: 20px;
+  margin-bottom: 5px;
+  margin-top: 5px;
 }
-
 
 .order-details {
-    color: #7d879c;
-    font-size: 12px;
-    line-height: 1.5;
-    margin-bottom: 10px;
+  color: #7d879c;
+  font-size: 12px;
+  line-height: 1.5;
+  margin-bottom: 10px;
 }
-
 
 .user-info {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-top: 10px;
-    border-top: 1px solid #dce2ee;
-    padding-top: 15px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  border-top: 1px solid #dce2ee;
+  padding-top: 15px;
 }
-
 
 .user {
-    width: 5vh;
-    height: 5vh;
-    border-radius: 50%;
-    background: #202b47;
-    color: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 9px;
+  width: 5vh;
+  height: 5vh;
+  border-radius: 50%;
+  background: #202b47;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 9px;
 }
-
 
 .profile strong {
-    font-size: 10px;
+  font-size: 10px;
 }
-
 
 .profile p {
-    color: #168b4c;
-    font-size: 9px;
-    margin-top: 4px;
+  color: #168b4c;
+  font-size: 9px;
+  margin-top: 4px;
 }
-
 
 .rating {
-    margin-left: auto;
-    color: #f59e0b;
-    font-size: 9px;
-    font-weight: 600;
+  margin-left: auto;
+  color: #f59e0b;
+  font-size: 9px;
+  font-weight: 600;
 }
 
-
 .accept-btn {
-    width: 100%;
-    height: 40px;
-    background: #0966e9;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 8px 10px;
-    font-size: 15px;
-    font-weight: 600;
-    margin-top: 10px;
+  width: 100%;
+  height: 40px;
+  background: #0966e9;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 10px;
+  font-size: 15px;
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+.empty-orders {
+  grid-column: 1 / -1;
+  padding: 36px 20px;
+  border: 1px dashed #cbd5e1;
+  border-radius: 12px;
+  background: #fff;
+  color: #64748b;
+  text-align: center;
 }
