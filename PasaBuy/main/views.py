@@ -219,12 +219,34 @@ def order_page(request):
             "tip": str(order.tip),
             "due": order.due_time.strftime("%I:%M %p").lstrip("0"),
             "posted": order.posted_at.strftime("%I:%M %p").lstrip("0"),
+            "canCancel": True,
+            "cancelUrl": f"/order/{order.id}/cancel/",
         }, status=201)
 
     return render(request, "orderpage.html", {
         "poster_name": account_name,
         "student_id": account_id,
     })
+
+
+def cancel_order(request, order_id):
+    if not request.user.is_authenticated:
+        return JsonResponse({"error": "Log in before cancelling an order."}, status=401)
+    if request.method != "POST":
+        return JsonResponse({"error": "Only POST requests can cancel an order."}, status=405)
+
+    try:
+        order = FoodOrder.objects.get(
+            id=order_id,
+            poster=request.user,
+            status=FoodOrder.STATUS_POSTED,
+        )
+    except FoodOrder.DoesNotExist:
+        return JsonResponse({"error": "You can only cancel your own active orders."}, status=404)
+
+    order.status = FoodOrder.STATUS_CANCELLED
+    order.save(update_fields=["status"])
+    return JsonResponse({"status": order.status})
 
 
 def user_page(request):

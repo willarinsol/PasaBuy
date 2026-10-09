@@ -20,6 +20,7 @@ from django.conf.urls.static import static
 from django.urls import path
 from main.views import (
     browser,
+    cancel_order,
     hero_page,
     index,
     logout_view,
@@ -41,6 +42,7 @@ urlpatterns = [
     path('browser/', browser, name='browser'),
     path('my-orders/', my_orders, name='my_orders'),
     path('order/', order_page, name='order_page'),
+    path('order/<int:order_id>/cancel/', cancel_order, name='cancel_order'),
     path('profile/', user_page, name='user_page'),
     path('info/', info_page, name='info_page'),
     path('upload-id/', upload_id, name='upload_id'),

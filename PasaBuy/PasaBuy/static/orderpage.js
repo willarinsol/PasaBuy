@@ -213,7 +213,10 @@
 
     var claimButton = $("claimBtn");
     claimButton.disabled = false;
-    claimButton.querySelector("span").textContent = "Accept & Claim Food Run";
+    claimButton.dataset.cancelUrl = order.canCancel ? order.cancelUrl : "";
+    claimButton.querySelector("span").textContent = order.canCancel
+      ? "Cancel Food Run"
+      : "Accept & Claim Food Run";
 
     showView("order");
   }
@@ -279,6 +282,37 @@
   };
 
   $("claimBtn").onclick = function () {
+    if (this.dataset.cancelUrl) {
+      if (!window.confirm("Cancel this food run? This cannot be undone.")) {
+        return;
+      }
+
+      var button = this;
+      fetch(this.dataset.cancelUrl, {
+        method: "POST",
+        headers: {
+          "X-CSRFToken": getCsrfToken(),
+        },
+      })
+        .then(function (response) {
+          return response.json().then(function (data) {
+            if (!response.ok) {
+              throw new Error(data.error || "Unable to cancel the food run.");
+            }
+            return data;
+          });
+        })
+        .then(function () {
+          button.disabled = true;
+          button.dataset.cancelUrl = "";
+          button.querySelector("span").textContent = "Food Run Cancelled";
+        })
+        .catch(function (error) {
+          $("err").textContent = error.message;
+        });
+      return;
+    }
+
     this.disabled = true;
     this.querySelector("span").textContent = "Food Run Claimed";
   };

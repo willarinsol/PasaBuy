@@ -130,3 +130,27 @@ class FoodOrderTests(TestCase):
 
 		self.assertContains(response, "Other Cafe")
 		self.assertNotContains(response, "Own Cafe")
+
+	def test_only_order_owner_can_cancel_active_order(self):
+		owner = self.create_profiled_user("OWNER-1001", "Owner", "OWNER-1001")
+		other_user = self.create_profiled_user("OTHER-2001", "Other", "OTHER-2001")
+		order = FoodOrder.objects.create(
+			poster=owner,
+			poster_name="Owner User",
+			student_id="OWNER-1001",
+			target_store="Campus Cafe",
+			delivery_location="Science Building",
+			due_time=time(13, 30),
+		)
+
+		self.client.force_login(other_user)
+		forbidden_response = self.client.post(f"/order/{order.id}/cancel/")
+		self.assertEqual(forbidden_response.status_code, 404)
+		order.refresh_from_db()
+		self.assertEqual(order.status, FoodOrder.STATUS_POSTED)
+
+		self.client.force_login(owner)
+		cancel_response = self.client.post(f"/order/{order.id}/cancel/")
+		self.assertEqual(cancel_response.status_code, 200)
+		order.refresh_from_db()
+		self.assertEqual(order.status, FoodOrder.STATUS_CANCELLED)
