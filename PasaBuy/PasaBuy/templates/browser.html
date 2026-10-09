@@ -16,6 +16,7 @@
     {% include "includes/site_header.html" with show_post=True %}
 
     <main class="page">
+      {% csrf_token %}
       <section class="boardcard">
         <h1>Live Campus Food Run &amp; Request Board</h1>
         <p class="boarddescription">
@@ -36,7 +37,9 @@
               </span>
             </div>
             <h2>
-              {{ order.target_store }} &mdash; {{ order.delivery_location }}
+              <a href="{% url 'order_detail' order.id %}">
+                {{ order.target_store }} &mdash; {{ order.delivery_location }}
+              </a>
             </h2>
             <p class="order-details">
               {{ order.item_summary }}<br />{{ order.description }}
@@ -65,5 +68,6 @@
     </main>
 
     <script src="{% static 'script.js' %}"></script>
+    <script src="{% static 'browser.js' %}"></script>
   </body>
 </html>

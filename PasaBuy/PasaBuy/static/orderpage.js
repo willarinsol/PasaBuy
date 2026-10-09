@@ -213,7 +213,9 @@
 
     var claimButton = $("claimBtn");
     claimButton.disabled = false;
+    claimButton.hidden = !order.canCancel && !order.canAccept;
     claimButton.dataset.cancelUrl = order.canCancel ? order.cancelUrl : "";
+    claimButton.dataset.acceptUrl = order.canAccept ? order.acceptUrl : "";
     claimButton.querySelector("span").textContent = order.canCancel
       ? "Cancel Food Run"
       : "Accept & Claim Food Run";
@@ -313,6 +315,37 @@
       return;
     }
 
+    if (this.dataset.acceptUrl) {
+      var acceptButton = this;
+      acceptButton.disabled = true;
+      acceptButton.querySelector("span").textContent = "Accepting...";
+      fetch(this.dataset.acceptUrl, {
+        method: "POST",
+        headers: {
+          "X-CSRFToken": getCsrfToken(),
+        },
+      })
+        .then(function (response) {
+          return response.json().then(function (data) {
+            if (!response.ok) {
+              throw new Error(data.error || "Unable to accept the food run.");
+            }
+            return data;
+          });
+        })
+        .then(function () {
+          acceptButton.dataset.acceptUrl = "";
+          acceptButton.querySelector("span").textContent = "Accepted & Ongoing";
+        })
+        .catch(function (error) {
+          acceptButton.disabled = false;
+          acceptButton.querySelector("span").textContent =
+            "Accept & Claim Food Run";
+          $("err").textContent = error.message;
+        });
+      return;
+    }
+
     this.disabled = true;
     this.querySelector("span").textContent = "Food Run Claimed";
   };
@@ -326,4 +359,9 @@
       }
     }
   });
+
+  var initialOrder = $("initial-order-data");
+  if (initialOrder && initialOrder.textContent) {
+    renderOrder(JSON.parse(initialOrder.textContent));
+  }
 })();

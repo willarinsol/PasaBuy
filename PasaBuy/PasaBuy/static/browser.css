@@ -69,6 +69,17 @@
   margin-top: 5px;
 }
 
+.order-card h2 a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.order-card h2 a:hover,
+.order-card h2 a:focus-visible {
+  color: #1766df;
+  text-decoration: underline;
+}
+
 .order-details {
   color: #7d879c;
   font-size: 12px;

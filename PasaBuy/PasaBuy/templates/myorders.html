@@ -1,6 +1,9 @@
 {% load static %}
-<html>
+<!doctype html>
+<html lang="en">
   <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="{% static 'common.css' %}" />
     <link rel="stylesheet" href="{% static 'myorders.css' %}" />
     <link
@@ -12,121 +15,136 @@
   <body>
     {% include "includes/site_header.html" with show_post=True %}
 
-    <div class="page">
-      <div class="dashboardcontainer">
+    <main class="page">
+      {% csrf_token %}
+      <section class="dashboardcontainer">
         <div class="topbar">
           <div>
             <h1>My Campus Food Orders</h1>
             <p class="subdescription">
-              Track your posted food requests, monitor accepted deliveries in
-              transit, and manage pending runs looking for student runners.
+              Track orders you posted and food runs you accepted.
             </p>
           </div>
         </div>
 
         <div class="statsoverview">
           <div class="statbox allactive-box">
-            <span class="statlabel">Total Active Orders</span>
-            <h2>3</h2>
-            <p class="statsub">2 on going, 1 pending</p>
+            <span class="statlabel">All Active</span>
+            <h2>{{ active_count }}</h2>
+            <p class="statsub">Posted or accepted</p>
           </div>
-
           <div class="statbox">
-            <span class="statlabel">Pending Runner Acceptance</span>
-            <h2>1</h2>
-            <p class="statsub">Awaiting peer claim</p>
+            <span class="statlabel">Accepted &amp; Ongoing</span>
+            <h2>{{ ongoing_count }}</h2>
+            <p class="statsub">Your accepted runs</p>
           </div>
-
           <div class="statbox">
-            <span class="statlabel">Accepted & Ongoing</span>
-            <h2>2</h2>
-            <p class="statsub">Runner accepted</p>
+            <span class="statlabel">Completed</span>
+            <h2>{{ completed_count }}</h2>
+            <p class="statsub">Finished orders</p>
           </div>
-
           <div class="statbox">
-            <span class="statlabel">Completed This Term</span>
-            <h2>18 <small>Orders</small></h2>
+            <span class="statlabel">Cancelled</span>
+            <h2>{{ cancelled_count }}</h2>
+            <p class="statsub">Cancelled or expired</p>
           </div>
         </div>
 
-        <div class="filterbar">
+        <nav class="filterbar" aria-label="Order filters">
           <div class="filtertabs">
-            <button class="filterbtn active" type="button">All Active</button>
-            <button class="filterbtn" type="button">Pending Runner</button>
-            <button class="filterbtn" type="button">Accepted & Ongoing</button>
-            <button class="filterbtn" type="button">
-              Completed History (18)
+            <button class="filterbtn active" type="button" data-filter="active">
+              All Active
+            </button>
+            <button class="filterbtn" type="button" data-filter="claimed">
+              Accepted &amp; Ongoing
+            </button>
+            <button class="filterbtn" type="button" data-filter="completed">
+              Completed
+            </button>
+            <button class="filterbtn" type="button" data-filter="cancelled">
+              Cancelled
             </button>
           </div>
-        </div>
+        </nav>
 
-        <div class="contentlayout">
-          <div class="mainordercard">
+        <section class="orders-list" aria-live="polite">
+          {% for order in orders %}
+          <article
+            class="mainordercard order-entry"
+            data-status="{{ order.status }}"
+          >
             <div class="orderstatsheader">
-              <span class="status">Pending Runner Claim</span>
+              {% if order.status == 'posted' %}
+              <span class="status status-posted">Waiting for runner</span>
+              {% elif order.status == 'claimed' %}
+              <span class="status status-claimed">Accepted &amp; ongoing</span>
+              {% elif order.status == 'completed' %}
+              <span class="status status-completed">Completed</span>
+              {% else %}
+              <span class="status status-cancelled">Cancelled</span>
+              {% endif %}
+              <span class="due-label"
+                >Due {{ order.due_time|time:"g:i A" }}</span
+              >
             </div>
 
             <div class="orderbodygrid">
               <div class="orderdetails-left">
-                <h2>SM Muntinlupa - Coco Milktea</h2>
-
+                <h2>
+                  <a href="{% url 'order_detail' order.id %}">
+                    {{ order.target_store }}
+                  </a>
+                </h2>
                 <div class="itemsbox">
                   <span class="boxlabel">ORDERED MEAL ITEMS</span>
-                  <h3>
-                    1x Panda Milktea + Add Ons White Pearls<br />
-                    2x Taro Milktea + 50% Sugar
-                  </h3>
+                  <h3>{{ order.item_summary }}</h3>
                 </div>
               </div>
-
               <div class="destinationcard">
                 <span class="destlabel">Destination</span>
-                <strong>PDIC Building Rm 198</strong>
-                <p>Left Wing</p>
+                <strong>{{ order.delivery_location }}</strong>
+                <p>Posted by {{ order.poster_name }}</p>
               </div>
             </div>
 
             <div class="orderfooter">
               <div class="totalcost">
-                Total Cost: <span>₱150.00 + Food Cost</span>
+                Tip: <span>₱{{ order.tip|floatformat:2 }}</span>
               </div>
-
               <div class="actionbuttons">
-                <button class="edit-btn" type="button">Edit Request</button>
-                <button class="cancel-btn" type="button">
-                  Cancel Run (Refund)
+                {% if order.status == 'posted' and order.is_owner %}
+                <button
+                  class="cancel-btn order-action"
+                  type="button"
+                  data-action="cancel"
+                  data-order-id="{{ order.id }}"
+                >
+                  Cancel Order
                 </button>
+                {% elif order.status == 'claimed' %}
+                <button
+                  class="edit-btn order-action"
+                  type="button"
+                  data-action="complete"
+                  data-order-id="{{ order.id }}"
+                >
+                  Mark Completed
+                </button>
+                {% endif %}
               </div>
             </div>
-          </div>
+          </article>
+          {% empty %}
+          <p class="empty-orders">You do not have any orders yet.</p>
+          {% endfor %}
+          <p class="empty-orders filtered-empty" hidden>
+            No orders in this category.
+          </p>
+        </section>
+      </section>
+    </main>
 
-          <div class="sidebarinfo">
-            <div class="protocolcard">
-              <h3>Campus Protection</h3>
-
-              <div class="infoblock">
-                <strong>Payment Arrives as Order Does</strong>
-                <p>
-                  Your money stays safe in your wallet until you receive the
-                  food!
-                </p>
-              </div>
-
-              <div class="infoblock">
-                <strong>OCR Receipt Matching</strong>
-                <p>
-                  Runners must hand over to you the printed cashier receipt.
-                </p>
-              </div>
-
-              <a href="{% url 'info_page' %}" class="protocol-link"
-                >Read PasaBuy Protocol →</a
-              >
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
     <script src="{% static 'script.js' %}"></script>
+    <script src="{% static 'myorders.js' %}"></script>
   </body>
 </html>

@@ -1,9 +1,10 @@
 import json
-from datetime import time
+from datetime import time, timedelta
 
 from django.test import TestCase
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 from .models import FoodOrder, FoodOrderItem, UserProfile
 
@@ -154,3 +155,70 @@ class FoodOrderTests(TestCase):
 		self.assertEqual(cancel_response.status_code, 200)
 		order.refresh_from_db()
 		self.assertEqual(order.status, FoodOrder.STATUS_CANCELLED)
+
+	def test_runner_acceptance_and_completion_update_order_status(self):
+		owner = self.create_profiled_user("OWNER-3001", "Owner", "OWNER-3001")
+		runner = self.create_profiled_user("RUNNER-3001", "Runner", "RUNNER-3001")
+		order = FoodOrder.objects.create(
+			poster=owner,
+			poster_name="Owner User",
+			student_id="OWNER-3001",
+			target_store="Campus Cafe",
+			delivery_location="Science Building",
+			due_time=time(13, 30),
+			due_at=timezone.now() + timedelta(hours=1),
+		)
+
+		self.client.force_login(runner)
+		accept_response = self.client.post(f"/order/{order.id}/accept/")
+		self.assertEqual(accept_response.status_code, 200)
+		order.refresh_from_db()
+		self.assertEqual(order.status, FoodOrder.STATUS_CLAIMED)
+		self.assertEqual(order.claimed_by, runner)
+
+		complete_response = self.client.post(f"/order/{order.id}/complete/")
+		self.assertEqual(complete_response.status_code, 200)
+		order.refresh_from_db()
+		self.assertEqual(order.status, FoodOrder.STATUS_COMPLETED)
+
+	def test_due_posted_order_is_cancelled_when_my_orders_loads(self):
+		owner = self.create_profiled_user("OWNER-4001", "Owner", "OWNER-4001")
+		order = FoodOrder.objects.create(
+			poster=owner,
+			poster_name="Owner User",
+			student_id="OWNER-4001",
+			target_store="Expired Cafe",
+			delivery_location="Science Building",
+			due_time=time(13, 30),
+			due_at=timezone.now() - timedelta(minutes=1),
+		)
+		self.client.force_login(owner)
+
+		response = self.client.get("/my-orders/")
+
+		self.assertEqual(response.status_code, 200)
+		order.refresh_from_db()
+		self.assertEqual(order.status, FoodOrder.STATUS_CANCELLED)
+
+	def test_order_detail_assigns_owner_or_accept_permission(self):
+		owner = self.create_profiled_user("OWNER-5001", "Owner", "OWNER-5001")
+		other_user = self.create_profiled_user("OTHER-5001", "Other", "OTHER-5001")
+		order = FoodOrder.objects.create(
+			poster=owner,
+			poster_name="Owner User",
+			student_id="OWNER-5001",
+			target_store="Detail Cafe",
+			delivery_location="Science Building",
+			due_time=time(13, 30),
+			due_at=timezone.now() + timedelta(hours=1),
+		)
+
+		self.client.force_login(owner)
+		owner_response = self.client.get(f"/order/{order.id}/")
+		self.assertContains(owner_response, '"canCancel": true')
+		self.assertNotContains(owner_response, '"canAccept": true')
+
+		self.client.force_login(other_user)
+		other_response = self.client.get(f"/order/{order.id}/")
+		self.assertContains(other_response, '"canAccept": true')
+		self.assertNotContains(other_response, '"canCancel": true')

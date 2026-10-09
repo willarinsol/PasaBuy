@@ -39,11 +39,19 @@ class FoodOrder(models.Model):
 		on_delete=models.CASCADE,
 		related_name="food_orders",
 	)
+	claimed_by = models.ForeignKey(
+		settings.AUTH_USER_MODEL,
+		on_delete=models.SET_NULL,
+		null=True,
+		blank=True,
+		related_name="claimed_food_orders",
+	)
 	poster_name = models.CharField(max_length=150)
 	student_id = models.CharField(max_length=50)
 	target_store = models.CharField(max_length=200)
 	delivery_location = models.CharField(max_length=200)
 	due_time = models.TimeField()
+	due_at = models.DateTimeField(null=True, blank=True)
 	description = models.TextField(blank=True)
 	tip = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 	status = models.CharField(
@@ -52,6 +60,8 @@ class FoodOrder(models.Model):
 		default=STATUS_POSTED,
 	)
 	posted_at = models.DateTimeField(auto_now_add=True)
+	claimed_at = models.DateTimeField(null=True, blank=True)
+	completed_at = models.DateTimeField(null=True, blank=True)
 
 	def __str__(self):
 		return f"{self.target_store} for {self.poster_name}"

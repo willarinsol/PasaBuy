@@ -16,7 +16,7 @@
     {% include "includes/site_header.html" with show_post=True %}
 
     <main>
-      {% csrf_token %}
+      {% csrf_token %} {{ initial_order|json_script:"initial-order-data" }}
       <section id="formView">
         <h1>Post a PasaBuy Food Run</h1>
         <p class="sub">
