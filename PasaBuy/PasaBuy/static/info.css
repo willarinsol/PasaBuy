@@ -1,0 +1,188 @@
+:root {
+  --navy: #00205b;
+  --blue: #1e3cff;
+  --yellow: #ffd400;
+  --bg: #f0f0f0;
+  --text: #111;
+  --muted: #555;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* ---------- Navbar ---------- */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  height: 56px;
+  background: var(--navy);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.logo {
+  font-family: "Poppins", Arial, sans-serif;
+  font-weight: 700;
+  font-size: 1.7rem;
+  color: #fff;
+  text-decoration: none;
+}
+.logo span { color: var(--yellow); }
+
+.nav-right { display: flex; align-items: center; gap: 22px; }
+
+.icon-btn {
+  background: none;
+  border: 0;
+  color: #cfd6ea;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+.icon-btn:hover { color: #fff; }
+
+.post-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--blue);
+  color: #fff;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.75rem;
+  line-height: 1.1;
+  text-align: center;
+  padding: 7px 16px;
+  border-radius: 8px;
+  transition: filter 0.2s;
+}
+.post-btn:hover { filter: brightness(1.15); }
+
+.avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--yellow);
+  color: #000;
+  font-size: 0.7rem;
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+}
+
+/* ---------- Intro ---------- */
+.page { padding: 70px 24px 90px; }
+
+.intro { text-align: center; }
+
+.eyebrow {
+  font-family: "Poppins", Arial, sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  color: var(--blue);
+}
+
+.intro h1 {
+  font-family: "Poppins", Arial, sans-serif;
+  font-weight: 700;
+  font-size: clamp(2rem, 5vw, 2.6rem);
+  margin: 2px 0 6px;
+}
+.intro h1 .pasa { color: var(--navy); }
+.intro h1 .buy  { color: var(--yellow); }
+
+.subtitle { color: var(--muted); font-size: 0.95rem; }
+
+/* ---------- Steps ---------- */
+.steps {
+  max-width: 940px;
+  margin: 56px auto 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+  align-items: start;
+}
+
+.step-card {
+  background: #fff;
+  border-radius: 4px;
+  padding: 12px 16px 32px;
+  min-height: 150px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+  cursor: pointer;
+  transition: transform 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.step-icon {
+  width: 40px;
+  height: 40px;
+  background: var(--navy);
+  border-radius: 6px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 26px;
+}
+.step-icon svg { width: 30px; height: 30px; }
+
+.step-num {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--blue);
+  margin-bottom: 4px;
+}
+
+.step-card h3 {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+
+.step-text {
+  font-size: 0.68rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.step-num, .step-card h3, .step-text { transition: color 0.25s ease; }
+
+/* Hover: box zooms, turns blue, text turns yellow */
+.step-card:hover,
+.step-card:focus-visible {
+  transform: scale(1.06);
+  background: var(--blue);
+  box-shadow: 0 14px 30px rgba(30, 60, 255, 0.35);
+}
+.step-card:hover .step-num,
+.step-card:hover h3,
+.step-card:hover .step-text,
+.step-card:focus-visible .step-num,
+.step-card:focus-visible h3,
+.step-card:focus-visible .step-text {
+  color: var(--white);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .step-card, .step-num, .step-card h3, .step-text { transition: none; }
+  .step-card:hover { transform: none; }
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 760px) {
+  .steps { grid-template-columns: 1fr; max-width: 360px; }
+  .page { padding-top: 48px; }
+  .navbar { padding: 0 14px; }
+  .nav-right { gap: 14px; }
+}
