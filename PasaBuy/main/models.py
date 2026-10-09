@@ -16,6 +16,7 @@ class UserProfile(models.Model):
 	graduation_term = models.CharField(max_length=50, blank=True)
 	id_front = models.FileField(upload_to="institutional_ids/")
 	id_back = models.FileField(upload_to="institutional_ids/")
+	is_approved = models.BooleanField(default=False, verbose_name="KYC approved")
 	created_at = models.DateTimeField(auto_now_add=True)
 
 	def __str__(self):

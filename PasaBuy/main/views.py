@@ -158,6 +158,12 @@ def browser(request):
     return render(request, "browser.html", {"orders": orders})
 
 
+def user_is_approved(user):
+    return user.is_authenticated and getattr(
+        getattr(user, "userprofile", None), "is_approved", False
+    )
+
+
 def my_orders(request):
     if not request.user.is_authenticated:
         return redirect("index")
@@ -233,6 +239,10 @@ def order_page(request):
     if request.method == "POST":
         if not request.user.is_authenticated:
             return JsonResponse({"error": "Log in before posting a PasaBuy."}, status=401)
+        if not user_is_approved(request.user):
+            return JsonResponse({
+                "error": "Your account is awaiting manual KYC approval.",
+            }, status=403)
 
         try:
             payload = json.loads(request.body)
@@ -316,6 +326,10 @@ def accept_order(request, order_id):
         return JsonResponse({"error": "Log in before accepting an order."}, status=401)
     if request.method != "POST":
         return JsonResponse({"error": "Only POST requests can accept an order."}, status=405)
+    if not user_is_approved(request.user):
+        return JsonResponse({
+            "error": "Your account is awaiting manual KYC approval.",
+        }, status=403)
 
     expire_due_orders()
     try:

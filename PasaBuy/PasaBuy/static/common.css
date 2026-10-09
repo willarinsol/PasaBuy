@@ -176,6 +176,16 @@ body {
   outline: none;
 }
 
+.approval-notice {
+  padding: 11px 24px;
+  background: #fff7d6;
+  border-bottom: 1px solid #f2cf62;
+  color: #72540a;
+  font-size: 13px;
+  line-height: 1.4;
+  text-align: center;
+}
+
 @media (max-width: 700px) {
   .site-header {
     padding: 10px 16px;

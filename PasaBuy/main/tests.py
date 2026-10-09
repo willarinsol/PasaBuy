@@ -38,6 +38,8 @@ class AuthenticationFlowTests(TestCase):
 
 		self.assertRedirects(complete_response, "/hero/")
 		user = User.objects.get(username="STUDENT-1001")
+		profile = UserProfile.objects.get(user=user)
+		self.assertFalse(profile.is_approved)
 		self.assertTrue(UserProfile.objects.filter(user=user).exists())
 
 		self.client.get("/logout/")
@@ -63,6 +65,7 @@ class FoodOrderTests(TestCase):
 			graduation_term="2027",
 			id_front=SimpleUploadedFile(f"{username}-front.txt", b"front"),
 			id_back=SimpleUploadedFile(f"{username}-back.txt", b"back"),
+			is_approved=True,
 		)
 		return user
 
@@ -80,6 +83,7 @@ class FoodOrderTests(TestCase):
 			graduation_term="2027",
 			id_front=SimpleUploadedFile("front.txt", b"front"),
 			id_back=SimpleUploadedFile("back.txt", b"back"),
+			is_approved=True,
 		)
 		self.client.force_login(user)
 
@@ -222,3 +226,38 @@ class FoodOrderTests(TestCase):
 		other_response = self.client.get(f"/order/{order.id}/")
 		self.assertContains(other_response, '"canAccept": true')
 		self.assertNotContains(other_response, '"canCancel": true')
+
+	def test_unapproved_user_can_browse_but_cannot_post_or_accept(self):
+		pending_user = self.create_profiled_user("PENDING-1001", "Pending", "PENDING-1001")
+		pending_user.userprofile.is_approved = False
+		pending_user.userprofile.save(update_fields=["is_approved"])
+		approved_user = self.create_profiled_user("APPROVED-1001", "Approved", "APPROVED-1001")
+		order = FoodOrder.objects.create(
+			poster=approved_user,
+			poster_name="Approved User",
+			student_id="APPROVED-1001",
+			target_store="Campus Cafe",
+			delivery_location="Science Building",
+			due_time=time(13, 30),
+			due_at=timezone.now() + timedelta(hours=1),
+		)
+		self.client.force_login(pending_user)
+
+		self.assertEqual(self.client.get("/hero/").status_code, 200)
+		hero_response = self.client.get("/hero/")
+		self.assertContains(hero_response, "awaiting manual KYC approval")
+		self.assertContains(hero_response, "Post")
+		post_response = self.client.post(
+			"/order/",
+			data=json.dumps({
+				"posterName": "Pending User",
+				"posterSid": "PENDING-1001",
+				"target": "Campus Cafe",
+				"deliver": "Science Building",
+				"dueInput": "13:30",
+				"items": [{"name": "Lunch", "qty": 1}],
+			}),
+			content_type="application/json",
+		)
+		self.assertEqual(post_response.status_code, 403)
+		self.assertEqual(self.client.post(f"/order/{order.id}/accept/").status_code, 403)

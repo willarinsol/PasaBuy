@@ -11,12 +11,14 @@
   </div>
 
   <div class="site-header__actions">
-    {% if show_post %}
+    {% if show_post and request.user.is_authenticated %}
     <a class="site-header__post" id="goPost" href="{% url 'order_page' %}">
       <span class="site-header__post-icon" aria-hidden="true">+</span>
       <span>Post<br />PasaBuy</span>
     </a>
-    {% endif %} {% if request.user.is_authenticated %}
+    {% endif %}
+
+    {% if request.user.is_authenticated %}
     <div class="account-menu">
       <button
         class="user-menu-toggle"
@@ -42,8 +44,18 @@
     </div>
     {% endif %}
 
-    <a href="{% url 'hero' %}" class="site-header__logo"
-      >Pasa<span>Buy</span></a
-    >
+    <a href="{% url 'hero' %}" class="site-header__logo">Pasa<span>Buy</span></a>
   </div>
 </header>
+
+{% if request.user.is_authenticated %}
+  {% with profile=request.user.userprofile %}
+    {% if not profile.is_approved %}
+    <div class="approval-notice" role="status">
+      Your account is awaiting manual KYC approval. You can browse PasaBuy; posting
+      and accepting will prompt you to wait until an administrator approves your
+      account.
+    </div>
+    {% endif %}
+  {% endwith %}
+{% endif %}
