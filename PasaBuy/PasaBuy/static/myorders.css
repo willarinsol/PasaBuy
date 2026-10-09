@@ -166,6 +166,69 @@
   text-align: center;
 }
 
+.review-panel {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(15, 23, 42, 0.45);
+}
+
+.review-panel[hidden] {
+  display: none;
+}
+
+.review-dialog {
+  width: min(100%, 460px);
+  padding: 24px;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 18px 50px rgba(15, 23, 42, 0.25);
+}
+
+.review-dialog h2 {
+  margin: 0 0 6px;
+}
+
+.review-dialog p {
+  margin: 0 0 18px;
+  color: #64748b;
+  font-size: 13px;
+}
+
+.review-dialog label {
+  display: block;
+  margin: 12px 0 6px;
+  color: #334155;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.review-dialog select,
+.review-dialog textarea {
+  width: 100%;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 10px;
+  font: inherit;
+}
+
+.review-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.review-error {
+  min-height: 18px;
+  margin-top: 10px;
+  color: #b42318;
+  font-size: 12px;
+}
+
 .orderstatsheader {
   display: flex;
   align-items: center;

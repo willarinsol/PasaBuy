@@ -82,6 +82,7 @@
 
   $("itemForm").appendChild(addItemButton);
   addRow();
+  $("currentUserAvatar").textContent = getInitials($("fName").value);
 
   $("fTip").addEventListener("input", function () {
     $("tipEcho").textContent = this.value || 0;
@@ -219,6 +220,7 @@
     claimButton.querySelector("span").textContent = order.canCancel
       ? "Cancel Food Run"
       : "Accept & Claim Food Run";
+    $("editDesc").hidden = !order.canEdit;
 
     showView("order");
   }
@@ -262,9 +264,31 @@
   };
 
   $("saveDesc").onclick = function () {
-    current.desc = $("eDesc").value.trim();
-    saveOrder(current);
-    showDescription(current.desc);
+    var description = $("eDesc").value.trim();
+    fetch(current.editUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": getCsrfToken(),
+      },
+      body: JSON.stringify({ description: description }),
+    })
+      .then(function (response) {
+        return response.json().then(function (data) {
+          if (!response.ok) {
+            throw new Error(data.error || "Unable to save the description.");
+          }
+          return data;
+        });
+      })
+      .then(function (data) {
+        current.desc = data.description;
+        saveOrder(current);
+        showDescription(current.desc);
+      })
+      .catch(function (error) {
+        $("err").textContent = error.message;
+      });
   };
 
   $("goPost").onclick = function () {
@@ -277,6 +301,7 @@
     $("descCount").textContent = 0;
     $("tipEcho").textContent = 150;
     $("err").textContent = "";
+    $("currentUserAvatar").textContent = getInitials($("fName").value);
 
     clearRows();
     addRow();

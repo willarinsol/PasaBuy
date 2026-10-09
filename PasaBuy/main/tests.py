@@ -6,7 +6,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.contrib.auth.models import User
 from django.utils import timezone
 
-from .models import FoodOrder, FoodOrderItem, UserProfile
+from .models import FoodOrder, FoodOrderItem, FoodOrderReview, UserProfile
 
 
 class AuthenticationFlowTests(TestCase):
@@ -120,6 +120,7 @@ class FoodOrderTests(TestCase):
 			target_store="Own Cafe",
 			delivery_location="Own Building",
 			due_time=time(13, 30),
+			due_at=timezone.now() + timedelta(hours=1),
 		)
 		FoodOrder.objects.create(
 			poster=other_user,
@@ -128,6 +129,7 @@ class FoodOrderTests(TestCase):
 			target_store="Other Cafe",
 			delivery_location="Other Building",
 			due_time=time(13, 30),
+			due_at=timezone.now() + timedelta(hours=1),
 		)
 		self.client.force_login(current_user)
 
@@ -180,10 +182,36 @@ class FoodOrderTests(TestCase):
 		self.assertEqual(order.status, FoodOrder.STATUS_CLAIMED)
 		self.assertEqual(order.claimed_by, runner)
 
-		complete_response = self.client.post(f"/order/{order.id}/complete/")
+		self.assertEqual(
+			self.client.post(
+				f"/order/{order.id}/complete/",
+				data=json.dumps({"rating": 5}),
+				content_type="application/json",
+			).status_code,
+			404,
+		)
+		self.client.force_login(owner)
+		self.assertEqual(
+			self.client.post(
+				f"/order/{order.id}/complete/",
+				data=json.dumps({}),
+				content_type="application/json",
+			).status_code,
+			400,
+		)
+		complete_response = self.client.post(
+			f"/order/{order.id}/complete/",
+			data=json.dumps({"rating": 5, "review": "Fast and careful delivery."}),
+			content_type="application/json",
+		)
 		self.assertEqual(complete_response.status_code, 200)
 		order.refresh_from_db()
 		self.assertEqual(order.status, FoodOrder.STATUS_COMPLETED)
+		review = FoodOrderReview.objects.get(order=order)
+		self.assertEqual(review.runner, runner)
+		self.assertEqual(review.reviewer, owner)
+		self.assertEqual(review.rating, 5)
+		self.assertEqual(review.review, "Fast and careful delivery.")
 
 	def test_due_posted_order_is_cancelled_when_my_orders_loads(self):
 		owner = self.create_profiled_user("OWNER-4001", "Owner", "OWNER-4001")
@@ -261,3 +289,35 @@ class FoodOrderTests(TestCase):
 		)
 		self.assertEqual(post_response.status_code, 403)
 		self.assertEqual(self.client.post(f"/order/{order.id}/accept/").status_code, 403)
+
+	def test_only_order_owner_can_edit_description(self):
+		owner = self.create_profiled_user("OWNER-6001", "Owner", "OWNER-6001")
+		other_user = self.create_profiled_user("OTHER-6001", "Other", "OTHER-6001")
+		order = FoodOrder.objects.create(
+			poster=owner,
+			poster_name="Owner User",
+			student_id="OWNER-6001",
+			target_store="Campus Cafe",
+			delivery_location="Science Building",
+			due_time=time(13, 30),
+			description="Original description",
+			due_at=timezone.now() + timedelta(hours=1),
+		)
+
+		self.client.force_login(other_user)
+		forbidden_response = self.client.post(
+			f"/order/{order.id}/description/",
+			data=json.dumps({"description": "Changed by someone else"}),
+			content_type="application/json",
+		)
+		self.assertEqual(forbidden_response.status_code, 404)
+
+		self.client.force_login(owner)
+		update_response = self.client.post(
+			f"/order/{order.id}/description/",
+			data=json.dumps({"description": "Updated by owner"}),
+			content_type="application/json",
+		)
+		self.assertEqual(update_response.status_code, 200)
+		order.refresh_from_db()
+		self.assertEqual(order.description, "Updated by owner")

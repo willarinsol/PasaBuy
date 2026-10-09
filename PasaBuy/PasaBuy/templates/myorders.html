@@ -17,6 +17,27 @@
 
     <main class="page">
       {% csrf_token %}
+      <div class="review-panel" id="reviewPanel" hidden>
+        <div class="review-dialog" role="dialog" aria-modal="true" aria-labelledby="reviewTitle">
+          <h2 id="reviewTitle">Rate your runner</h2>
+          <p>How was your delivery experience?</p>
+          <label for="runnerRating">Rating</label>
+          <select id="runnerRating">
+            <option value="5">5 - Excellent</option>
+            <option value="4">4 - Good</option>
+            <option value="3">3 - Okay</option>
+            <option value="2">2 - Needs improvement</option>
+            <option value="1">1 - Poor</option>
+          </select>
+          <label for="runnerReview">Review (optional)</label>
+          <textarea id="runnerReview" maxlength="1000" rows="4" placeholder="Share a quick note about the delivery"></textarea>
+          <div class="review-actions">
+            <button class="edit-btn" id="cancelReview" type="button">Cancel</button>
+            <button class="save-btn" id="submitReview" type="button">Submit &amp; Complete</button>
+          </div>
+          <div class="review-error" id="reviewError" role="alert"></div>
+        </div>
+      </div>
       <section class="dashboardcontainer">
         <div class="topbar">
           <div>
@@ -121,7 +142,7 @@
                 >
                   Cancel Order
                 </button>
-                {% elif order.status == 'claimed' %}
+                {% elif order.status == 'claimed' and order.is_owner %}
                 <button
                   class="edit-btn order-action"
                   type="button"

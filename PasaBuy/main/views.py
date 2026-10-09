@@ -14,7 +14,7 @@ from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from django.utils import timezone
 
-from .models import FoodOrder, FoodOrderItem, UserProfile
+from .models import FoodOrder, FoodOrderItem, FoodOrderReview, UserProfile
 
 def index(request):
     if request.method == "POST":
@@ -208,6 +208,8 @@ def order_payload(order, user):
         "status": order.status,
         "canCancel": is_owner and order.status == FoodOrder.STATUS_POSTED,
         "cancelUrl": f"/order/{order.id}/cancel/",
+        "canEdit": is_owner and order.status == FoodOrder.STATUS_POSTED,
+        "editUrl": f"/order/{order.id}/description/",
         "canAccept": (
             user.is_authenticated
             and not is_owner
@@ -321,6 +323,30 @@ def cancel_order(request, order_id):
     return JsonResponse({"status": order.status})
 
 
+def update_order_description(request, order_id):
+    if not request.user.is_authenticated:
+        return JsonResponse({"error": "Log in before editing an order."}, status=401)
+    if request.method != "POST":
+        return JsonResponse({"error": "Only POST requests can edit an order."}, status=405)
+
+    try:
+        order = FoodOrder.objects.get(
+            id=order_id,
+            poster=request.user,
+            status=FoodOrder.STATUS_POSTED,
+        )
+        payload = json.loads(request.body)
+        description = str(payload.get("description", "")).strip()[:1000]
+    except FoodOrder.DoesNotExist:
+        return JsonResponse({"error": "Only the order owner can edit this order."}, status=404)
+    except (json.JSONDecodeError, TypeError):
+        return JsonResponse({"error": "Enter a valid description."}, status=400)
+
+    order.description = description
+    order.save(update_fields=["description"])
+    return JsonResponse({"description": order.description})
+
+
 def accept_order(request, order_id):
     if not request.user.is_authenticated:
         return JsonResponse({"error": "Log in before accepting an order."}, status=401)
@@ -358,13 +384,34 @@ def complete_order(request, order_id):
     order = FoodOrder.objects.filter(
         id=order_id,
         status=FoodOrder.STATUS_CLAIMED,
-    ).filter(Q(poster=request.user) | Q(claimed_by=request.user)).first()
+        poster=request.user,
+    ).select_related("claimed_by").first()
     if order is None:
-        return JsonResponse({"error": "You cannot complete this order."}, status=404)
+        return JsonResponse({"error": "Only the order owner can complete this order."}, status=404)
 
-    order.status = FoodOrder.STATUS_COMPLETED
-    order.completed_at = timezone.now()
-    order.save(update_fields=["status", "completed_at"])
+    if order.claimed_by is None:
+        return JsonResponse({"error": "This order has no assigned runner."}, status=400)
+
+    try:
+        payload = json.loads(request.body)
+        rating = int(payload.get("rating"))
+        review = str(payload.get("review", "")).strip()[:1000]
+    except (json.JSONDecodeError, TypeError, ValueError):
+        return JsonResponse({"error": "Choose a rating from 1 to 5."}, status=400)
+    if rating < 1 or rating > 5:
+        return JsonResponse({"error": "Choose a rating from 1 to 5."}, status=400)
+
+    with transaction.atomic():
+        FoodOrderReview.objects.create(
+            order=order,
+            reviewer=request.user,
+            runner=order.claimed_by,
+            rating=rating,
+            review=review,
+        )
+        order.status = FoodOrder.STATUS_COMPLETED
+        order.completed_at = timezone.now()
+        order.save(update_fields=["status", "completed_at"])
     return JsonResponse({"status": order.status})
 
 
