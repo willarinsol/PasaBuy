@@ -2,8 +2,8 @@
 <html lang="en">
   {% load static %}
   <head>
+    <link rel="stylesheet" href="{% static 'common.css' %}" />
     <link rel="stylesheet" href="{% static 'heropage.css' %}" />
-    <link rel="stylesheet" href="{% static 'style.css' %}" />
     <link
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap"
       rel="stylesheet"
@@ -11,41 +11,7 @@
     <title>Pasabuy - Landing Page</title>
   </head>
   <body>
-    <header class="header">
-      <div class="header-left">
-        <img
-          src="{% static 'images/loalogo.png' %}"
-          class="loalogo"
-          alt="Lyceum of Alabang Logo"
-        />
-        <h2>LYCEUM OF ALABANG</h2>
-      </div>
-      {% if request.user.is_authenticated %}
-      <div class="account-menu">
-        <button
-          class="user-menu-toggle"
-          type="button"
-          aria-label="Open account menu"
-          aria-expanded="false"
-        >
-          <span class="user-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24">
-              <circle cx="12" cy="8" r="3.5"></circle>
-              <path d="M5 20c.8-3.5 3.2-5.5 7-5.5s6.2 2 7 5.5"></path>
-            </svg>
-          </span>
-        </button>
-        <span class="account-name">
-          {{ request.user.get_full_name|default:request.user.username }}
-        </span>
-        <div class="account-panel" hidden>
-          <a href="#">Account Settings</a>
-          <a href="{% url 'logout' %}">Log out</a>
-        </div>
-      </div>
-      {% endif %}
-      <h1 class="pasabuy-logo">Pasa<span>Buy</span></h1>
-    </header>
+    {% include "includes/site_header.html" with show_post=True %}
 
     <div class="hero-page">
       <div class="welcome">
@@ -67,7 +33,10 @@
               Real-time queue & handoffs. Delivered by student & employee peers.
             </p>
           </div>
-          <button type="button" onclick="window.location.href = '/browser'">
+          <button
+            type="button"
+            onclick="window.location.href = '{% url 'browser' %}'"
+          >
             See All Orders →
           </button>
         </div>

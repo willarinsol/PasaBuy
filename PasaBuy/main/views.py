@@ -135,6 +135,18 @@ def my_orders(request):
     return render(request, "myorders.html")
 
 
+def order_page(request):
+    return render(request, "orderpage.html")
+
+
+def user_page(request):
+    return render(request, "userpage.html")
+
+
+def info_page(request):
+    return render(request, "info.html")
+
+
 def upload_id(request):
     return render(request, "index.html", {"initial_view": "upload"})
 

@@ -24,9 +24,12 @@ from main.views import (
     index,
     logout_view,
     my_orders,
+    info_page,
+    order_page,
     signup_complete,
     signup_details,
     upload_id,
+    user_page,
 )
 
 urlpatterns = [
@@ -37,6 +40,9 @@ urlpatterns = [
     path('hero/', hero_page, name='hero'),
     path('browser/', browser, name='browser'),
     path('my-orders/', my_orders, name='my_orders'),
+    path('order/', order_page, name='order_page'),
+    path('profile/', user_page, name='user_page'),
+    path('info/', info_page, name='info_page'),
     path('upload-id/', upload_id, name='upload_id'),
     path('admin/', admin.site.urls),
 ]

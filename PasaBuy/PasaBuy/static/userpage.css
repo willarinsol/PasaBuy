@@ -38,41 +38,6 @@ body {
   outline-offset: 2px;
 }
 
-
-.topbar {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 14px;
-  height: 56px;
-  padding: 0 32px;
-  background: var(--navy);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
-}
-
-.icon-btn {
-  display: grid;
-  place-items: center;
-  padding: 4px;
-  background: none;
-  border: 0;
-  border-radius: 50%;
-  cursor: pointer;
-}
-
-.initials {
-  display: grid;
-  place-items: center;
-  width: 40px;
-  height: 40px;
-  background: var(--gold-bright);
-  border-radius: 50%;
-  color: #000;
-  font-size: 15px;
-  font-weight: 700;
-}
-
-
 .frame {
   max-width: 1280px;
   margin: 24px auto 0;
@@ -97,7 +62,6 @@ body {
   background: var(--panel);
   border-radius: 0 0 30px 30px;
 }
-
 
 .profile-bar {
   position: relative;
@@ -195,7 +159,6 @@ body {
   margin-top: 4px;
 }
 
-
 .btn {
   display: flex;
   align-items: center;
@@ -207,7 +170,9 @@ body {
   font-weight: 700;
   white-space: nowrap;
   cursor: pointer;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
 }
 
 .btn:active {
@@ -235,7 +200,6 @@ body {
   background: #f1f4ff;
 }
 
-
 .content {
   display: grid;
   grid-template-columns: minmax(280px, 380px) 1fr;
@@ -248,7 +212,6 @@ body {
   background: #fff;
   border-radius: 28px;
 }
-
 
 .contact {
   min-height: 440px;
@@ -309,7 +272,6 @@ body {
   color: var(--blue);
   font-size: 12px;
 }
-
 
 .reviews {
   padding: 22px 24px 26px;
@@ -459,7 +421,6 @@ body {
   transition: width 0.9s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
-
 @media (max-width: 1024px) {
   .content {
     grid-template-columns: 1fr;
@@ -473,10 +434,6 @@ body {
 @media (max-width: 760px) {
   :root {
     --avatar: 120px;
-  }
-
-  .topbar {
-    padding: 0 16px;
   }
 
   .frame {
