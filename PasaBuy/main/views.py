@@ -7,7 +7,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
 from django.db import IntegrityError, transaction
-from django.db.models import Q
+from django.db.models import Q, Avg
+from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ValidationError
 from django.http import JsonResponse
@@ -415,10 +416,95 @@ def complete_order(request, order_id):
     return JsonResponse({"status": order.status})
 
 
-def user_page(request):
-    return render(request, "userpage.html")
+def user_page(request, username=None):
+    if username:
+        target_user = get_object_or_404(User, username=username)
+    else:
+        if not request.user.is_authenticated:
+            return redirect("index")
+        target_user = request.user
+             
+    profile = getattr(target_user, "userprofile", None)
+    if not profile:
+        return redirect("index")
 
+    # Handle Profile Updates
+    if request.method == "POST":
+        if not request.user.is_authenticated or target_user != request.user:
+            return JsonResponse({"error": "Unauthorized"}, status=403)
+        try:
+            payload = json.loads(request.body)
+            target_user.email = str(payload.get("email", target_user.email)).strip()
+            target_user.save(update_fields=["email"])
+            
+            profile.phone = str(payload.get("phone", profile.phone)).strip()
+            profile.facebook = str(payload.get("facebook", profile.facebook)).strip()
+            profile.instagram = str(payload.get("instagram", profile.instagram)).strip()
+            profile.save(update_fields=["phone", "facebook", "instagram"])
+            return JsonResponse({"status": "success"})
+        except (json.JSONDecodeError, TypeError, ValueError):
+            return JsonResponse({"error": "Invalid data."}, status=400)
 
+    # Retrieve reviews and statistics where this user was the runner
+    reviews = FoodOrderReview.objects.filter(runner=target_user).select_related('reviewer').order_by('-created_at')
+    reviews_count = reviews.count()
+    avg_rating = reviews.aggregate(Avg('rating'))['rating__avg'] or 0.0
+    positive_reviews = reviews.filter(rating__gte=4).count()
+    positive_pct = int((positive_reviews / reviews_count) * 100) if reviews_count > 0 else 0
+    completed_orders = FoodOrder.objects.filter(claimed_by=target_user, status=FoodOrder.STATUS_COMPLETED).count()
+
+    # Determine trust level label
+    if avg_rating >= 4.5:
+        trust_level = "TOP TIER TRUST"
+    elif avg_rating >= 3.0:
+        trust_level = "RELIABLE"
+    elif reviews_count > 0:
+        trust_level = "NEEDS IMPROVEMENT"
+    else:
+        trust_level = "NEW / UNRATED"
+
+    # Fetch 5 most recent text reviews
+    recent_reviews = []
+    for r in reviews[:5]:
+        reviewer_name = r.reviewer.get_full_name() or r.reviewer.username
+        reviewer_initials = "".join([w[0] for w in reviewer_name.split()[:2]]).upper() if reviewer_name else "U"
+        recent_reviews.append({
+            "reviewer_name": reviewer_name,
+            "reviewer_initials": reviewer_initials,
+            "rating": r.rating,
+            "review_text": r.review,
+            "date": r.created_at.strftime("%B %d, %Y")
+        })
+
+    name = target_user.get_full_name() or target_user.username
+    initials = "".join([w[0] for w in name.split()[:2]]).upper() if name else "U"
+
+    profile_data = {
+        "name": name,
+        "photo": "",
+        "initials": initials,
+        "role": profile.role,
+        "studentId": profile.institutional_id,
+        "program": f"Class of {profile.graduation_term}" if profile.graduation_term else "N/A",
+        "email": target_user.email,
+        "phone": profile.phone or "Not provided",
+        "facebook": profile.facebook,
+        "instagram": profile.instagram,
+        "is_self": request.user.is_authenticated and target_user.id == request.user.id
+    }
+
+    rating_data = {
+        "score": float(avg_rating),
+        "orders": completed_orders,
+        "positive": positive_pct,
+        "trust": trust_level,
+        "recent_reviews": recent_reviews
+    }
+
+    return render(request, "userpage.html", {
+        "target_profile": profile_data,
+        "target_rating": rating_data
+    })
 def info_page(request):
     return render(request, "info.html")
 

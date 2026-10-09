@@ -52,6 +52,7 @@ urlpatterns = [
     path('order/<int:order_id>/description/', update_order_description, name='update_order_description'),
     path('order/<int:order_id>/complete/', complete_order, name='complete_order'),
     path('profile/', user_page, name='user_page'),
+    path('profile/<str:username>/', user_page, name='user_profile'), # ADD THIS LINE
     path('info/', info_page, name='info_page'),
     path('upload-id/', upload_id, name='upload_id'),
     path('admin/', admin.site.urls),
