@@ -11,6 +11,9 @@ body {
 body {
   font-family: "Poppins", sans-serif;
   background: #e6e5e5;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 .site-header {
@@ -100,7 +103,137 @@ body {
   font-weight: 500;
   line-height: 18px;
 }
+/* Header Styles */
+.header {
+    height: 10vh;
+    background: #052764;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 55px;
+    box-shadow: 0 2px 7px rgba(0, 0, 0, 0.9);
+}
 
+.logosection {
+    display: flex;
+    align-items: center;
+}
+
+.loalogo {
+    width: auto;
+    height: 6vh;
+    object-fit: contain;
+    margin-right: 30px;
+}
+
+.pasabuylogo {
+    width: auto;
+    height: 6vh;
+    object-fit: contain;
+    object-position:center;
+}
+
+.headeractions {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+}
+
+.post-btn {
+    width: 15vh;
+    height: 6vh;
+    background: #243cff;
+    color: white;
+    border: none;
+    border-radius: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    cursor: pointer;
+}
+
+.post-btn span {
+    color: #ffdf00;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.post-btn p {
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 15px;
+    margin: 0;
+}
+
+.user-section {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: white;
+}
+
+.user-section span {
+    font-size: 20px;
+    margin: 0;
+}
+
+.usericon {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+}
+
+/* Footer Styles */
+.footer {
+    height: 12vh;
+    background: #052764;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    margin-top: auto;
+}
+
+.footerleft {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    color: white;
+}
+
+.brandname {
+    font-size: 20px;
+    font-weight: 700;
+    color: white;
+}
+
+.divider {
+    color: white;
+    font-size: 18px;
+}
+
+.copyright {
+    font-size: 14px;
+    color: white;
+}
+
+.footernav {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+}
+
+.footernav a {
+    color: white;
+    font-size: 15px;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.footernav a:hover {
+    color: #ffdf00;
+}
 .account-menu {
   position: relative;
   gap: 12px;

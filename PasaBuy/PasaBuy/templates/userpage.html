@@ -164,5 +164,6 @@
     {{ target_rating|json_script:"rating-data" }}
     <script src="{% static 'script.js' %}"></script>
     <script src="{% static 'userpage.js' %}"></script>
+    {% include "includes/site_footer.html" %}
   </body>
 </html>

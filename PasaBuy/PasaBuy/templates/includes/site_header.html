@@ -1,51 +1,42 @@
 {% load static %}
-<header class="site-header">
-  <div class="site-header__brand">
-    <a href="{% url 'hero' %}" class="site-header__home">
-      <img
-        src="{% static 'images/loalogo.png' %}"
-        alt="Lyceum of Alabang Logo"
-      />
-      <span>LYCEUM OF ALABANG</span>
-    </a>
-  </div>
+<header class="header">
+    <div class="logosection">
+        <a href="{% url 'hero' %}">
+            <img src="{% static 'images/loalogo.png' %}" alt="LOA Logo" class="loalogo">
+            <img src="{% static 'images/pasabuylogo.png' %}" class="pasabuylogo">
+            <a href="{% url 'hero' %}" class="site-header__logo">Pasa<span>Buy</span></a>
+        </a>
+    </div>
 
-  <div class="site-header__actions">
-    {% if show_post and request.user.is_authenticated %}
-    <a class="site-header__post" id="goPost" href="{% url 'order_page' %}">
-      <span class="site-header__post-icon" aria-hidden="true">+</span>
-      <span>Post<br />PasaBuy</span>
-    </a>
-    {% endif %}
+    <div class="headeractions">
+        {% if show_post and request.user.is_authenticated %}
+        <a href="{% url 'order_page' %}" style="text-decoration: none;">
+            <button class="post-btn" type="button">
+                <span>+</span>
+                <p>Post<br>PasaBuy</p>
+            </button>
+        </a>
+        {% endif %}
 
-    {% if request.user.is_authenticated %}
-    <div class="account-menu">
-      <button
-        class="user-menu-toggle"
-        type="button"
-        aria-label="Open account menu"
-        aria-expanded="false"
-      >
-        <span class="user-icon" aria-hidden="true">
+        {% if request.user.is_authenticated %}
+        <div class="user-section account-menu">
+            <button class="user-menu-toggle" type="button" aria-label="Open account menu">
+                <span class="user-icon" aria-hidden="true">
           <svg viewBox="0 0 24 24">
             <circle cx="12" cy="8" r="3.5"></circle>
             <path d="M5 20c.8-3.5 3.2-5.5 7-5.5s6.2 2 7 5.5"></path>
           </svg>
-        </span>
-      </button>
-      <span class="account-name">
-        {{ request.user.get_full_name|default:request.user.username }}
-      </span>
-      <div class="account-panel" hidden>
-        <a href="{% url 'user_page' %}">Account Settings</a>
-        <a href="{% url 'my_orders' %}">My Orders</a>
-        <a href="{% url 'logout' %}">Log out</a>
-      </div>
+            </button>
+            <span>{{ request.user.get_full_name|default:request.user.username }}</span>
+            
+            <div class="account-panel" hidden>
+                <a href="{% url 'user_page' %}">Account Settings</a>
+                <a href="{% url 'my_orders' %}">My Orders</a>
+                <a href="{% url 'logout' %}">Log out</a>
+            </div>
+        </div>
+        {% endif %}
     </div>
-    {% endif %}
-
-    <a href="{% url 'hero' %}" class="site-header__logo">Pasa<span>Buy</span></a>
-  </div>
 </header>
 
 {% if request.user.is_authenticated %}
@@ -53,8 +44,7 @@
     {% if not profile.is_approved %}
     <div class="approval-notice" role="status">
       Your account is awaiting manual KYC approval. You can browse PasaBuy; posting
-      and accepting will prompt you to wait until an administrator approves your
-      account.
+      and accepting will prompt you to wait until an administrator approves your account.
     </div>
     {% endif %}
   {% endwith %}
