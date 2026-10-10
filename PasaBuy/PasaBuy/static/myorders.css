@@ -1,321 +1,436 @@
 .dashboardcontainer {
-    width: 175vh;
-    max-width: 95vw;
-    margin: 20px auto;
-    background: transparent;
-    padding: 20px;
+  width: min(1200px, 95vw);
+  max-width: 100%;
+  margin: 20px auto;
+  background: transparent;
+  padding: 20px;
 }
-
 
 .topbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
 }
-
 
 .topbar h1 {
-    font-size: 30px;
-    margin-bottom: 5px;
-    margin-top: 0;
+  font-size: 30px;
+  margin-bottom: 5px;
+  margin-top: 0;
 }
 
-
 .subdescription {
-    color: #6c758b;
-    font-size: 15px;
-    margin: 0;
+  color: #6c758b;
+  font-size: 15px;
+  margin: 0;
 }
 
 .statsoverview {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 15px;
-    margin-bottom: 25px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+  margin-bottom: 25px;
 }
 
-
 .statbox {
-    background: #ffffff;
-    border: 1px solid #e2e6ef;
-    border-radius: 12px;
-    padding: 16px;
+  background: #ffffff;
+  border: 1px solid #e2e6ef;
+  border-radius: 12px;
+  padding: 16px;
 }
 
 .statbox.allactive-box {
-    border: 1px solid #ffd000;
-    background: #fffdf0;
+  border: 1px solid #ffd000;
+  background: #fffdf0;
 }
 
 .statlabel {
-    font-size: 11px;
-    color: #6c758b;
-    font-weight: 600;
+  font-size: 11px;
+  color: #6c758b;
+  font-weight: 600;
 }
-
 
 .statbox h2 {
-    font-size: 26px;
-    margin: 8px 0 4px 0;
+  font-size: 26px;
+  margin: 8px 0 4px 0;
 }
-
 
 .statsub {
-    font-size: 10px;
-    color: #1766df;
-    margin: 0;
+  font-size: 10px;
+  color: #1766df;
+  margin: 0;
 }
-
 
 .greentext {
-    color: #168b4c;
+  color: #168b4c;
 }
-
 
 .filterbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
 }
-
 
 .filtertabs {
-    display: flex;
-    gap: 8px;
+  display: flex;
+  gap: 8px;
 }
-
 
 .filterbtn {
-    background: transparent;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 600;
-    color: #6c758b;
-    cursor: pointer;
+  background: transparent;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #6c758b;
+  cursor: pointer;
 }
-
 
 .filterbtn.active {
-    background: #03256c;
-    color: #ffffff;
+  background: #03256c;
+  color: #ffffff;
 }
-
 
 .badge {
-    background: #1766df;
-    color: white;
-    padding: 2px 6px;
-    border-radius: 10px;
-    font-size: 10px;
+  background: #1766df;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-size: 10px;
 }
-
 
 .contentlayout {
-    display: grid;
-    grid-template-columns: 2.8fr 1.2fr;
-    gap: 20px;
+  display: grid;
+  grid-template-columns: 2.8fr 1.2fr;
+  gap: 20px;
 }
-
 
 .mainordercard {
-    background: #ffffff;
-    border: 1px solid #ffd000;
-    border-radius: 16px;
-    padding: 20px;
+  background: #ffffff;
+  border: 1px solid #ffd000;
+  border-radius: 16px;
+  padding: 20px;
 }
 
+.orders-list {
+  display: grid;
+  gap: 16px;
+}
+
+.order-entry[hidden] {
+  display: none;
+}
 
 .orderstatsheader {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 18px;
+  justify-content: space-between;
 }
 
+.due-label {
+  color: #64748b;
+  font-size: 11px;
+  font-weight: 600;
+}
 
-.status{
-    background: #fef9c3;
-    color: #854d0e;
-    font-weight: 700;
-    font-size: 11px;
-    padding: 4px 10px;
-    border-radius: 12px;
-    border: 1px solid #fde047;
+.status-posted {
+  background: #fef9c3;
+  color: #854d0e;
+  border-color: #fde047;
+}
+
+.status-claimed {
+  background: #dbeafe;
+  color: #1d4ed8;
+  border-color: #93c5fd;
+}
+
+.status-completed {
+  background: #dcfce7;
+  color: #166534;
+  border-color: #86efac;
+}
+
+.status-cancelled {
+  background: #fee2e2;
+  color: #991b1b;
+  border-color: #fca5a5;
+}
+
+.empty-orders {
+  padding: 36px 20px;
+  border: 1px dashed #cbd5e1;
+  border-radius: 12px;
+  background: #fff;
+  color: #64748b;
+  text-align: center;
+}
+
+.review-panel {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(15, 23, 42, 0.45);
+}
+
+.review-panel[hidden] {
+  display: none;
+}
+
+.review-dialog {
+  width: min(100%, 460px);
+  padding: 24px;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 18px 50px rgba(15, 23, 42, 0.25);
+}
+
+.review-dialog h2 {
+  margin: 0 0 6px;
+}
+
+.review-dialog p {
+  margin: 0 0 18px;
+  color: #64748b;
+  font-size: 13px;
+}
+
+.review-dialog label {
+  display: block;
+  margin: 12px 0 6px;
+  color: #334155;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.review-dialog select,
+.review-dialog textarea {
+  width: 100%;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 10px;
+  font: inherit;
+}
+
+.review-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.review-error {
+  min-height: 18px;
+  margin-top: 10px;
+  color: #b42318;
+  font-size: 12px;
+}
+
+.orderstatsheader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.status {
+  background: #fef9c3;
+  color: #854d0e;
+  font-weight: 700;
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 12px;
+  border: 1px solid #fde047;
 }
 
 .orderbodygrid {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 15px;
-    margin-bottom: 18px;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 15px;
+  margin-bottom: 18px;
 }
-
 
 .orderdetails-left h2 {
-    font-size: 18px;
-    margin-top: 0;
-    margin-bottom: 12px;
+  font-size: 18px;
+  margin-top: 0;
+  margin-bottom: 12px;
 }
 
+.orderdetails-left h2 a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.orderdetails-left h2 a:hover,
+.orderdetails-left h2 a:focus-visible {
+  color: #1766df;
+  text-decoration: underline;
+}
 
 .itemsbox {
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
-    border-radius: 10px;
-    padding: 12px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 12px;
 }
-
 
 .boxlabel {
-    font-size: 9px;
-    font-weight: 700;
-    color: #64748b;
-    letter-spacing: 0.5px;
+  font-size: 9px;
+  font-weight: 700;
+  color: #64748b;
+  letter-spacing: 0.5px;
 }
 
-
 .itemsbox h3 {
-    font-size: 12px;
-    margin: 6px 0 10px 0;
-    line-height: 1.4;
+  font-size: 12px;
+  margin: 6px 0 10px 0;
+  line-height: 1.4;
 }
 
 .destinationcard {
-    background: #eff6ff;
-    border: 1px solid #bfdbfe;
-    border-radius: 10px;
-    padding: 12px;
-    display: flex;
-    flex-direction: column;
-    height: 6vh;
-    margin-top: 43px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 10px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  margin-top: 43px;
 }
-
 
 .destlabel {
-    font-size: 9px;
-    color: #1e40af;
-    font-weight: 700;
+  font-size: 9px;
+  color: #1e40af;
+  font-weight: 700;
 }
-
 
 .destinationcard strong {
-    font-size: 13px;
-    margin-top: 6px;
-    color: #1e3a8a;
+  font-size: 13px;
+  margin-top: 6px;
+  color: #1e3a8a;
 }
 
-
 .destinationcard p {
-    font-size: 10px;
-    color: #3b82f6;
-    margin-top: 2px;
+  font-size: 10px;
+  color: #3b82f6;
+  margin-top: 2px;
 }
 
 .orderfooter {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-top: 1px solid #f1f5f9;
-    padding-top: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #f1f5f9;
+  padding-top: 15px;
 }
 
 .totalcost {
-    font-size: 13px;
-    font-weight: 800;
+  font-size: 13px;
+  font-weight: 800;
 }
 
-
 .totalcost span {
-    font-size: 16px;
-    color: #03256c;
+  font-size: 16px;
+  color: #03256c;
 }
 
 .actionbuttons {
-    display: flex;
-    gap: 8px;
+  display: flex;
+  gap: 8px;
 }
-
 
 .edit-btn {
-    background: #ffffff;
-    border: 1px solid #cbd5e1;
-    padding: 8px 12px;
-    border-radius: 8px;
-    font-size: 11px;
-    font-weight: 600;
-    cursor: pointer;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
 }
-
 
 .tip-btn {
-    background: #f59e0b;
-    color: #ffffff;
-    border: none;
-    padding: 8px 14px;
-    border-radius: 8px;
-    font-size: 11px;
-    font-weight: 700;
-    cursor: pointer;
+  background: #f59e0b;
+  color: #ffffff;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
 }
-
 
 .cancel-btn {
-    background: #ffffff;
-    border: 1px solid #fca5a5;
-    color: #dc2626;
-    padding: 8px 12px;
-    border-radius: 8px;
-    font-size: 11px;
-    font-weight: 600;
-    cursor: pointer;
+  background: #ffffff;
+  border: 1px solid #fca5a5;
+  color: #dc2626;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
 }
-
 
 .protocolcard {
-    background: #ffffff;
-    border: 1px solid #e2e8f0;
-    border-radius: 16px;
-    padding: 18px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 18px;
 }
-
 
 .protocolcard h3 {
-    font-size: 15px;
-    margin-top: 0;
-    margin-bottom: 15px;
+  font-size: 15px;
+  margin-top: 0;
+  margin-bottom: 15px;
 }
-
 
 .infoblock {
-    margin-bottom: 14px;
+  margin-bottom: 14px;
 }
-
 
 .infoblock strong {
-    font-size: 12px;
-    display: block;
-    margin-bottom: 3px;
+  font-size: 12px;
+  display: block;
+  margin-bottom: 3px;
 }
-
 
 .infoblock p {
-    font-size: 11px;
-    color: #64748b;
-    line-height: 1.4;
-    margin: 0;
+  font-size: 11px;
+  color: #64748b;
+  line-height: 1.4;
+  margin: 0;
 }
 
-
 .protocol-link {
-    display: inline-block;
-    margin-top: 10px;
-    font-size: 11px;
-    color: #1766df;
-    font-weight: 600;
-    text-decoration: none;
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 11px;
+  color: #1766df;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+@media (max-width: 760px) {
+  .dashboardcontainer {
+    width: 100%;
+    padding: 16px 8px;
+  }
+
+  .statsoverview,
+  .orderbodygrid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .orderfooter,
+  .filtertabs {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .actionbuttons {
+    justify-content: flex-start;
+  }
 }

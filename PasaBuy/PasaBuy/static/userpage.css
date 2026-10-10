@@ -38,41 +38,6 @@ body {
   outline-offset: 2px;
 }
 
-
-.topbar {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 14px;
-  height: 56px;
-  padding: 0 32px;
-  background: var(--navy);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
-}
-
-.icon-btn {
-  display: grid;
-  place-items: center;
-  padding: 4px;
-  background: none;
-  border: 0;
-  border-radius: 50%;
-  cursor: pointer;
-}
-
-.initials {
-  display: grid;
-  place-items: center;
-  width: 40px;
-  height: 40px;
-  background: var(--gold-bright);
-  border-radius: 50%;
-  color: #000;
-  font-size: 15px;
-  font-weight: 700;
-}
-
-
 .frame {
   max-width: 1280px;
   margin: 24px auto 0;
@@ -98,7 +63,6 @@ body {
   border-radius: 0 0 30px 30px;
 }
 
-
 .profile-bar {
   position: relative;
   display: flex;
@@ -117,17 +81,17 @@ body {
   left: 30px;
   width: var(--avatar);
   height: var(--avatar);
-  background: #f4f4f6;
+  background: var(--gold-bright);
   border-radius: 50%;
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
+  display: grid;
+  place-items: center;
 }
-
-.avatar img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  object-fit: cover;
+.avatar-initials {
+  font-size: 56px;
+  font-weight: 700;
+  color: #000;
+  line-height: 1;
 }
 
 .status {
@@ -195,7 +159,6 @@ body {
   margin-top: 4px;
 }
 
-
 .btn {
   display: flex;
   align-items: center;
@@ -207,7 +170,9 @@ body {
   font-weight: 700;
   white-space: nowrap;
   cursor: pointer;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
 }
 
 .btn:active {
@@ -235,7 +200,6 @@ body {
   background: #f1f4ff;
 }
 
-
 .content {
   display: grid;
   grid-template-columns: minmax(280px, 380px) 1fr;
@@ -248,7 +212,6 @@ body {
   background: #fff;
   border-radius: 28px;
 }
-
 
 .contact {
   min-height: 440px;
@@ -309,7 +272,6 @@ body {
   color: var(--blue);
   font-size: 12px;
 }
-
 
 .reviews {
   padding: 22px 24px 26px;
@@ -405,12 +367,6 @@ body {
   letter-spacing: 0.04em;
 }
 
-.criteria {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  list-style: none;
-}
 
 .crit-top {
   display: flex;
@@ -443,22 +399,6 @@ body {
   font-weight: 700;
 }
 
-.bar {
-  height: 6px;
-  background: #e5e7eb;
-  border-radius: 999px;
-  overflow: hidden;
-}
-
-.bar > i {
-  display: block;
-  width: 0;
-  height: 100%;
-  background: var(--review-blue);
-  border-radius: inherit;
-  transition: width 0.9s cubic-bezier(0.2, 0.7, 0.2, 1);
-}
-
 
 @media (max-width: 1024px) {
   .content {
@@ -473,10 +413,6 @@ body {
 @media (max-width: 760px) {
   :root {
     --avatar: 120px;
-  }
-
-  .topbar {
-    padding: 0 16px;
   }
 
   .frame {
@@ -550,4 +486,117 @@ body {
   .btn {
     transition: none;
   }
+}
+.edit-panel {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(15, 23, 42, 0.45);
+}
+.edit-panel[hidden] {
+  display: none !important;
+}
+.edit-dialog {
+  width: min(100%, 460px);
+  padding: 24px;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 18px 50px rgba(15, 23, 42, 0.25);
+}
+.edit-dialog h2 {
+  font-size: 20px;
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: #111;
+}
+.edit-dialog label {
+  display: block;
+  margin: 12px 0 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #334155;
+}
+.edit-dialog input {
+  width: 100%;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 10px;
+  font: inherit;
+  box-sizing: border-box;
+}
+.edit-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+/* Delete or ignore the old .criteria and .bar CSS classes, and add these: */
+.recent-reviews {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-height: 400px;
+  overflow-y: auto;
+  padding-right: 8px;
+}
+.user-review {
+  display: flex;
+  gap: 14px;
+  padding: 16px;
+  background: #f8fafc;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+}
+.ur-av {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--gold);
+  color: #000;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  font-size: 15px;
+  flex: none;
+}
+.ur-content {
+  flex: 1;
+  min-width: 0;
+}
+.ur-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+.ur-head strong {
+  font-size: 14px;
+  color: #1e293b;
+}
+.ur-date {
+  font-size: 11px;
+  color: #64748b;
+  font-weight: 500;
+}
+.ur-stars {
+  display: flex;
+  gap: 2px;
+  margin-bottom: 8px;
+}
+.ur-text {
+  font-size: 13px;
+  color: #475569;
+  margin: 0;
+  line-height: 1.5;
+  font-style: italic;
+}
+.no-reviews {
+  font-size: 13px;
+  color: #64748b;
+  text-align: center;
+  padding: 20px 0;
 }

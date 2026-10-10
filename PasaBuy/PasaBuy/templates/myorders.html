@@ -1,7 +1,10 @@
 {% load static %}
-<html>
+<!doctype html>
+<html lang="en">
   <head>
-    <link rel="stylesheet" href="{% static 'style.css' %}" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="{% static 'common.css' %}" />
     <link rel="stylesheet" href="{% static 'myorders.css' %}" />
     <link
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap"
@@ -10,155 +13,159 @@
     <title>PasaBuy - My Campus Food Orders</title>
   </head>
   <body>
-    <header class="header">
-      <div class="header-left">
-        <img
-          src="{% static 'images/loalogo.png' %}"
-          class="loalogo"
-          alt="Lyceum of Alabang Logo"
-        />
-        <h2>LYCEUM OF ALABANG</h2>
-      </div>
-      {% if request.user.is_authenticated %}
-      <div class="account-menu">
-        <button
-          class="user-menu-toggle"
-          type="button"
-          aria-label="Open account menu"
-          aria-expanded="false"
-        >
-          <span class="user-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24">
-              <circle cx="12" cy="8" r="3.5"></circle>
-              <path d="M5 20c.8-3.5 3.2-5.5 7-5.5s6.2 2 7 5.5"></path>
-            </svg>
-          </span>
-        </button>
-        <span class="account-name">
-          {{ request.user.get_full_name|default:request.user.username }}
-        </span>
-        <div class="account-panel" hidden>
-          <a href="#">Account Settings</a>
-          <a href="{% url 'logout' %}">Log out</a>
+    {% include "includes/site_header.html" with show_post=True %}
+
+    <main class="page">
+      {% csrf_token %}
+      <div class="review-panel" id="reviewPanel" hidden>
+        <div class="review-dialog" role="dialog" aria-modal="true" aria-labelledby="reviewTitle">
+          <h2 id="reviewTitle">Rate your runner</h2>
+          <p>How was your delivery experience?</p>
+          <label for="runnerRating">Rating</label>
+          <select id="runnerRating">
+            <option value="5">5 - Excellent</option>
+            <option value="4">4 - Good</option>
+            <option value="3">3 - Okay</option>
+            <option value="2">2 - Needs improvement</option>
+            <option value="1">1 - Poor</option>
+          </select>
+          <label for="runnerReview">Review (optional)</label>
+          <textarea id="runnerReview" maxlength="1000" rows="4" placeholder="Share a quick note about the delivery"></textarea>
+          <div class="review-actions">
+            <button class="edit-btn" id="cancelReview" type="button">Cancel</button>
+            <button class="save-btn" id="submitReview" type="button">Submit &amp; Complete</button>
+          </div>
+          <div class="review-error" id="reviewError" role="alert"></div>
         </div>
       </div>
-      {% endif %}
-      <h1 class="pasabuy-logo">Pasa<span>Buy</span></h1>
-    </header>
-
-    <div class="page">
-      <div class="dashboardcontainer">
+      <section class="dashboardcontainer">
         <div class="topbar">
           <div>
             <h1>My Campus Food Orders</h1>
             <p class="subdescription">
-              Track your posted food requests, monitor accepted deliveries in
-              transit, and manage pending runs looking for student runners.
+              Track orders you posted and food runs you accepted.
             </p>
           </div>
         </div>
 
         <div class="statsoverview">
           <div class="statbox allactive-box">
-            <span class="statlabel">Total Active Orders</span>
-            <h2>3</h2>
-            <p class="statsub">2 on going, 1 pending</p>
+            <span class="statlabel">All Active</span>
+            <h2>{{ active_count }}</h2>
+            <p class="statsub">Posted or accepted</p>
           </div>
-
           <div class="statbox">
-            <span class="statlabel">Pending Runner Acceptance</span>
-            <h2>1</h2>
-            <p class="statsub">Awaiting peer claim</p>
+            <span class="statlabel">Accepted &amp; Ongoing</span>
+            <h2>{{ ongoing_count }}</h2>
+            <p class="statsub">Your accepted runs</p>
           </div>
-
           <div class="statbox">
-            <span class="statlabel">Accepted & Ongoing</span>
-            <h2>2</h2>
-            <p class="statsub">Runner accepted</p>
+            <span class="statlabel">Completed</span>
+            <h2>{{ completed_count }}</h2>
+            <p class="statsub">Finished orders</p>
           </div>
-
           <div class="statbox">
-            <span class="statlabel">Completed This Term</span>
-            <h2>18 <small>Orders</small></h2>
+            <span class="statlabel">Cancelled</span>
+            <h2>{{ cancelled_count }}</h2>
+            <p class="statsub">Cancelled or expired</p>
           </div>
         </div>
 
-        <div class="filterbar">
+        <nav class="filterbar" aria-label="Order filters">
           <div class="filtertabs">
-            <button class="filterbtn active" type="button">All Active</button>
-            <button class="filterbtn" type="button">Pending Runner</button>
-            <button class="filterbtn" type="button">Accepted & Ongoing</button>
-            <button class="filterbtn" type="button">
-              Completed History (18)
+            <button class="filterbtn active" type="button" data-filter="active">
+              All Active
+            </button>
+            <button class="filterbtn" type="button" data-filter="claimed">
+              Accepted &amp; Ongoing
+            </button>
+            <button class="filterbtn" type="button" data-filter="completed">
+              Completed
+            </button>
+            <button class="filterbtn" type="button" data-filter="cancelled">
+              Cancelled
             </button>
           </div>
-        </div>
+        </nav>
 
-        <div class="contentlayout">
-          <div class="mainordercard">
+        <section class="orders-list" aria-live="polite">
+          {% for order in orders %}
+          <article
+            class="mainordercard order-entry"
+            data-status="{{ order.status }}"
+          >
             <div class="orderstatsheader">
-              <span class="status">Pending Runner Claim</span>
+              {% if order.status == 'posted' %}
+              <span class="status status-posted">Waiting for runner</span>
+              {% elif order.status == 'claimed' %}
+              <span class="status status-claimed">Accepted &amp; ongoing</span>
+              {% elif order.status == 'completed' %}
+              <span class="status status-completed">Completed</span>
+              {% else %}
+              <span class="status status-cancelled">Cancelled</span>
+              {% endif %}
+              <span class="due-label"
+                >Due {{ order.due_time|time:"g:i A" }}</span
+              >
             </div>
 
             <div class="orderbodygrid">
               <div class="orderdetails-left">
-                <h2>SM Muntinlupa - Coco Milktea</h2>
-
+                <h2>
+                  <a href="{% url 'order_detail' order.id %}">
+                    {{ order.target_store }}
+                  </a>
+                </h2>
                 <div class="itemsbox">
                   <span class="boxlabel">ORDERED MEAL ITEMS</span>
-                  <h3>
-                    1x Panda Milktea + Add Ons White Pearls<br />
-                    2x Taro Milktea + 50% Sugar
-                  </h3>
+                  <h3>{{ order.item_summary }}</h3>
                 </div>
               </div>
-
               <div class="destinationcard">
                 <span class="destlabel">Destination</span>
-                <strong>PDIC Building Rm 198</strong>
-                <p>Left Wing</p>
+                <strong>{{ order.delivery_location }}</strong>
+                <p>Posted by {{ order.poster_name }}</p>
               </div>
             </div>
 
             <div class="orderfooter">
               <div class="totalcost">
-                Total Cost: <span>₱150.00 + Food Cost</span>
+                Tip: <span>₱{{ order.tip|floatformat:2 }}</span>
               </div>
-
               <div class="actionbuttons">
-                <button class="edit-btn" type="button">Edit Request</button>
-                <button class="cancel-btn" type="button">
-                  Cancel Run (Refund)
+                {% if order.status == 'posted' and order.is_owner %}
+                <button
+                  class="cancel-btn order-action"
+                  type="button"
+                  data-action="cancel"
+                  data-order-id="{{ order.id }}"
+                >
+                  Cancel Order
                 </button>
+                {% elif order.status == 'claimed' and order.is_owner %}
+                <button
+                  class="edit-btn order-action"
+                  type="button"
+                  data-action="complete"
+                  data-order-id="{{ order.id }}"
+                >
+                  Mark Completed
+                </button>
+                {% endif %}
               </div>
             </div>
-          </div>
+          </article>
+          {% empty %}
+          <p class="empty-orders">You do not have any orders yet.</p>
+          {% endfor %}
+          <p class="empty-orders filtered-empty" hidden>
+            No orders in this category.
+          </p>
+        </section>
+      </section>
+    </main>
 
-          <div class="sidebarinfo">
-            <div class="protocolcard">
-              <h3>Campus Protection</h3>
-
-              <div class="infoblock">
-                <strong>Payment Arrives as Order Does</strong>
-                <p>
-                  Your money stays safe in your wallet until you receive the
-                  food!
-                </p>
-              </div>
-
-              <div class="infoblock">
-                <strong>OCR Receipt Matching</strong>
-                <p>
-                  Runners must hand over to you the printed cashier receipt.
-                </p>
-              </div>
-
-              <a href="#" class="protocol-link">Read PasaBuy Protocol →</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
     <script src="{% static 'script.js' %}"></script>
+    <script src="{% static 'myorders.js' %}"></script>
   </body>
 </html>

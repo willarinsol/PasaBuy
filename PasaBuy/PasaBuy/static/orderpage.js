@@ -1,263 +1,392 @@
 (function () {
+  var STORAGE_KEY = "pasabuy_latest_order";
 
-    var STORAGE_KEY = "pasabuy_latest_order";
+  var current = null;
 
-    var current = null;
+  function getInitials(name) {
+    var words = name.trim().split(/\s+/);
+    var first = words[0] ? words[0][0] : "";
+    var second = words.length > 1 ? words[1][0] : "";
+    return (first + second).toUpperCase();
+  }
 
-    function getInitials(name) {
-        var words = name.trim().split(/\s+/);
-        var first = words[0] ? words[0][0] : "";
-        var second = words.length > 1 ? words[1][0] : "";
-        return (first + second).toUpperCase();
-    }
+  function $(id) {
+    return document.getElementById(id);
+  }
 
-    function $(id) {
-        return document.getElementById(id);
-    }
+  function formatTime(hours, minutes, spaced) {
+    var period = hours >= 12 ? "PM" : "AM";
+    hours = hours % 12 || 12;
 
-    function formatTime(hours, minutes, spaced) {
-        var period = hours >= 12 ? "PM" : "AM";
-        hours = hours % 12 || 12;
+    var mins = String(minutes).padStart(2, "0");
+    var gap = spaced ? " " : "";
 
-        var mins = String(minutes).padStart(2, "0");
-        var gap = spaced ? " " : "";
+    return hours + ":" + mins + gap + period;
+  }
 
-        return hours + ":" + mins + gap + period;
-    }
+  function showView(view) {
+    $("formView").hidden = view !== "form";
+    $("orderView").hidden = view !== "order";
+    window.scrollTo(0, 0);
+  }
 
-    function showView(view) {
-        $("formView").hidden = (view !== "form");
-        $("orderView").hidden = (view !== "order");
-        window.scrollTo(0, 0);
-    }
+  function saveOrder(order) {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(order));
+    } catch (e) {}
+  }
 
-    function saveOrder(order) {
-        try {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(order));
-        } catch (e) {
+  function getCsrfToken() {
+    return document.querySelector("[name=csrfmiddlewaretoken]").value;
+  }
 
-        }
-    }
+  function addRow(qty, name) {
+    var row = document.createElement("div");
+    row.className = "r";
 
-    function addRow(qty, name) {
-        var row = document.createElement("div");
-        row.className = "r";
+    row.innerHTML =
+      '<input class="qty" type="number" min="1" value="' +
+      (qty || 1) +
+      '" aria-label="Quantity">' +
+      '<input class="nm" type="text" placeholder="e.g. 2-pc Spicy ChickenJoy with Rice" aria-label="Item name">' +
+      '<button type="button" class="rm" aria-label="Remove item">×</button>';
 
-        row.innerHTML =
-            '<input class="qty" type="number" min="1" value="' + (qty || 1) + '" aria-label="Quantity">' +
-            '<input class="nm" type="text" placeholder="e.g. 2-pc Spicy ChickenJoy with Rice" aria-label="Item name">' +
-            '<button type="button" class="rm" aria-label="Remove item">×</button>';
+    row.querySelector(".nm").value = name || "";
 
-        row.querySelector(".nm").value = name || "";
-
-        row.querySelector(".rm").onclick = function () {
-            var rowCount = $("itemForm").querySelectorAll(".r").length;
-            if (rowCount > 1) {
-                row.remove();
-            }
-        };
-
-        $("itemForm").insertBefore(row, $("addItem"));
-    }
-
-    function clearRows() {
-        $("itemForm").querySelectorAll(".r").forEach(function (row) {
-            row.remove();
-        });
-    }
-
-    var addItemButton = document.createElement("button");
-    addItemButton.type = "button";
-    addItemButton.id = "addItem";
-    addItemButton.className = "add-item";
-    addItemButton.textContent = "+ Add item";
-    addItemButton.onclick = function () {
-        addRow();
+    row.querySelector(".rm").onclick = function () {
+      var rowCount = $("itemForm").querySelectorAll(".r").length;
+      if (rowCount > 1) {
+        row.remove();
+      }
     };
 
-    $("itemForm").appendChild(addItemButton);
+    $("itemForm").insertBefore(row, $("addItem"));
+  }
+
+  function clearRows() {
+    $("itemForm")
+      .querySelectorAll(".r")
+      .forEach(function (row) {
+        row.remove();
+      });
+  }
+
+  var addItemButton = document.createElement("button");
+  addItemButton.type = "button";
+  addItemButton.id = "addItem";
+  addItemButton.className = "add-item";
+  addItemButton.textContent = "+ Add item";
+  addItemButton.onclick = function () {
     addRow();
+  };
 
-    $("fTip").addEventListener("input", function () {
-        $("tipEcho").textContent = this.value || 0;
-    });
+  $("itemForm").appendChild(addItemButton);
+  addRow();
+  $("currentUserAvatar").textContent = getInitials($("fName").value);
 
-    $("fDesc").addEventListener("input", function () {
-        $("descCount").textContent = this.value.length;
-    });
+  $("fTip").addEventListener("input", function () {
+    $("tipEcho").textContent = this.value || 0;
+  });
 
-    $("submitOrder").onclick = function () {
-        var target = $("fTarget").value.trim();
-        var deliver = $("fDeliver").value.trim();
-        var due = $("fDue").value;
-        var name = $("fName").value.trim();
-        var sid = $("fSid").value.trim();
-        var items = [];
+  $("fDesc").addEventListener("input", function () {
+    $("descCount").textContent = this.value.length;
+  });
 
-        $("itemForm").querySelectorAll(".r").forEach(function (row) {
-            var itemName = row.querySelector(".nm").value.trim();
-            var qty = parseInt(row.querySelector(".qty").value, 10) || 1;
+  $("submitOrder").onclick = function () {
+    var target = $("fTarget").value.trim();
+    var deliver = $("fDeliver").value.trim();
+    var due = $("fDue").value;
+    var name = $("fName").value.trim();
+    var sid = $("fSid").value.trim();
+    var items = [];
 
-            if (itemName) {
-                items.push({
-                    qty: Math.max(1, qty),
-                    name: itemName
-                });
-            }
-        });
-        
-        var missing = [];
-        if (!name) missing.push("your name");
-        if (!due) missing.push("a due time");
-        if (!target) missing.push("a target store");
-        if (!deliver) missing.push("where to deliver");
-        if (items.length === 0) missing.push("at least one item");
+    $("itemForm")
+      .querySelectorAll(".r")
+      .forEach(function (row) {
+        var itemName = row.querySelector(".nm").value.trim();
+        var qty = parseInt(row.querySelector(".qty").value, 10) || 1;
 
-        if (missing.length > 0) {
-            $("err").textContent = "Add " + missing.join(", ") + ".";
-            return;
+        if (itemName) {
+          items.push({
+            qty: Math.max(1, qty),
+            name: itemName,
+          });
         }
-        $("err").textContent = "";
+      });
 
-        var now = new Date();
-        var dueParts = due.split(":");
+    var missing = [];
+    if (!name) missing.push("your name");
+    if (!sid) missing.push("your student ID");
+    if (!due) missing.push("a due time");
+    if (!target) missing.push("a target store");
+    if (!deliver) missing.push("where to deliver");
+    if (items.length === 0) missing.push("at least one item");
 
-        var order = {
-            id: Date.now(),
-            posterName: name,
-            posterSid: sid,
-            target: target,
-            deliver: deliver,
-            items: items,
-            desc: $("fDesc").value.trim(),
-            tip: $("fTip").value || 0,
-            due: formatTime(+dueParts[0], +dueParts[1], false),
-            posted: formatTime(now.getHours(), now.getMinutes(), true)
-        };
+    if (missing.length > 0) {
+      $("err").textContent = "Add " + missing.join(", ") + ".";
+      return;
+    }
+    $("err").textContent = "";
 
-        saveOrder(order);
-        renderOrder(order);
+    var now = new Date();
+    var dueParts = due.split(":");
+
+    var order = {
+      id: Date.now(),
+      posterName: name,
+      posterSid: sid,
+      target: target,
+      deliver: deliver,
+      items: items,
+      desc: $("fDesc").value.trim(),
+      tip: $("fTip").value || 0,
+      dueInput: due,
+      due: formatTime(+dueParts[0], +dueParts[1], false),
+      posted: formatTime(now.getHours(), now.getMinutes(), true),
     };
 
-    function renderOrder(order) {
-        current = order;
-
-        // Title and time pill
-        $("oTitle").textContent = "Deliver " + order.target + " order to " + order.deliver;
-        $("oDue").textContent = order.due;
-        $("oPosted").textContent = order.posted;
-
-        $("oTarget").textContent = order.target;
-        $("oBadge").textContent = order.items.length + (order.items.length === 1 ? " Item Listed" : " Items Listed");
-        renderItems(order.items);
-
-        showDescription(order.desc);
-
-        var tip = Number(order.tip) || 0;
-        $("oAmt").textContent = "₱ " + tip.toLocaleString("en-PH", {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
+    fetch(window.location.href, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": getCsrfToken(),
+      },
+      body: JSON.stringify(order),
+    })
+      .then(function (response) {
+        return response.json().then(function (data) {
+          if (!response.ok) {
+            throw new Error(data.error || "Unable to post the food run.");
+          }
+          return data;
         });
-        $("oTipTxt").textContent = "(₱ " + tip + " Tip + Food Cost)";
+      })
+      .then(function (savedOrder) {
+        saveOrder(savedOrder);
+        renderOrder(savedOrder);
+      })
+      .catch(function (error) {
+        $("err").textContent = error.message;
+      });
+  };
 
-        var initials = getInitials(order.posterName);
-        $("pAv").textContent = initials;
-        $("cAv").textContent = initials;
-        $("cAv2").textContent = initials;
-        $("pName").textContent = order.posterName;
-        $("pCount").textContent = 0;
+  function renderOrder(order) {
+    current = order;
 
-        if (order.posterSid) {
-            $("pSid").textContent = "Student ID " + order.posterSid;
-            $("pSid").hidden = false;
-            $("sidDot").hidden = false;
-        } else {
-            $("pSid").hidden = true;
-            $("sidDot").hidden = true;
-        }
+    // Title and time pill
+    $("oTitle").textContent =
+      "Deliver " + order.target + " order to " + order.deliver;
+    $("oDue").textContent = order.due;
+    $("oPosted").textContent = order.posted;
 
-        var claimButton = $("claimBtn");
-        claimButton.disabled = false;
-        claimButton.querySelector("span").textContent = "Accept & Claim Food Run";
+    $("oTarget").textContent = order.target;
+    $("oBadge").textContent =
+      order.items.length +
+      (order.items.length === 1 ? " Item Listed" : " Items Listed");
+    renderItems(order.items);
 
-        showView("order");
+    showDescription(order.desc);
+
+    var tip = Number(order.tip) || 0;
+    $("oAmt").textContent =
+      "₱ " +
+      tip.toLocaleString("en-PH", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
+    $("oTipTxt").textContent = "(₱ " + tip + " Tip + Food Cost)";
+
+    var initials = getInitials(order.posterName);
+    $("pAv").textContent = initials;
+    $("cAv").textContent = initials;
+    $("cAv2").textContent = initials;
+    $("pName").textContent = order.posterName;
+    $("pCount").textContent = 0;
+
+    if (order.posterSid) {
+      $("pSid").textContent = "Student ID " + order.posterSid;
+      $("pSid").hidden = false;
+      $("sidDot").hidden = false;
+    } else {
+      $("pSid").hidden = true;
+      $("sidDot").hidden = true;
     }
 
-    function renderItems(items) {
-        var box = $("oItems");
-        box.innerHTML = "";
+    var claimButton = $("claimBtn");
+    claimButton.disabled = false;
+    claimButton.hidden = !order.canCancel && !order.canAccept;
+    claimButton.dataset.cancelUrl = order.canCancel ? order.cancelUrl : "";
+    claimButton.dataset.acceptUrl = order.canAccept ? order.acceptUrl : "";
+    claimButton.querySelector("span").textContent = order.canCancel
+      ? "Cancel Food Run"
+      : "Accept & Claim Food Run";
+    $("editDesc").hidden = !order.canEdit;
 
-        items.forEach(function (item) {
-            var row = document.createElement("div");
-            row.className = "row";
+    showView("order");
+  }
 
-            var qty = document.createElement("span");
-            qty.className = "q";
-            qty.textContent = item.qty + "x";
+  function renderItems(items) {
+    var box = $("oItems");
+    box.innerHTML = "";
 
-            var name = document.createElement("span");
-            name.textContent = item.name;
+    items.forEach(function (item) {
+      var row = document.createElement("div");
+      row.className = "row";
 
-            row.appendChild(qty);
-            row.appendChild(name);
-            box.appendChild(row);
+      var qty = document.createElement("span");
+      qty.className = "q";
+      qty.textContent = item.qty + "x";
+
+      var name = document.createElement("span");
+      name.textContent = item.name;
+
+      row.appendChild(qty);
+      row.appendChild(name);
+      box.appendChild(row);
+    });
+  }
+
+  function showDescription(text) {
+    $("oDesc").textContent = text || "No description yet.";
+    $("descView").hidden = false;
+    $("descEdit").hidden = true;
+  }
+
+  $("editDesc").onclick = function () {
+    $("eDesc").value = current && current.desc ? current.desc : "";
+    $("descView").hidden = true;
+    $("descEdit").hidden = false;
+    $("eDesc").focus();
+  };
+
+  $("cancelDesc").onclick = function () {
+    showDescription(current.desc);
+  };
+
+  $("saveDesc").onclick = function () {
+    var description = $("eDesc").value.trim();
+    fetch(current.editUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": getCsrfToken(),
+      },
+      body: JSON.stringify({ description: description }),
+    })
+      .then(function (response) {
+        return response.json().then(function (data) {
+          if (!response.ok) {
+            throw new Error(data.error || "Unable to save the description.");
+          }
+          return data;
         });
-    }
-
-    function showDescription(text) {
-        $("oDesc").textContent = text || "No description yet.";
-        $("descView").hidden = false;
-        $("descEdit").hidden = true;
-    }
-
-    $("editDesc").onclick = function () {
-        $("eDesc").value = (current && current.desc) ? current.desc : "";
-        $("descView").hidden = true;
-        $("descEdit").hidden = false;
-        $("eDesc").focus();
-    };
-
-    $("cancelDesc").onclick = function () {
-        showDescription(current.desc);
-    };
-
-    $("saveDesc").onclick = function () {
-        current.desc = $("eDesc").value.trim();
+      })
+      .then(function (data) {
+        current.desc = data.description;
         saveOrder(current);
         showDescription(current.desc);
-    };
+      })
+      .catch(function (error) {
+        $("err").textContent = error.message;
+      });
+  };
 
-    $("goPost").onclick = function () {
-        $("fName").value = "";
-        $("fSid").value = "";
-        $("fTarget").value = "";
-        $("fDeliver").value = "";
-        $("fDesc").value = "";
-        $("fDue").value = "";
-        $("fTip").value = 150;
+  $("goPost").onclick = function () {
+    $("fTarget").value = "";
+    $("fDeliver").value = "";
+    $("fDesc").value = "";
+    $("fDue").value = "";
+    $("fTip").value = 150;
 
-        $("descCount").textContent = 0;
-        $("tipEcho").textContent = 150;
-        $("err").textContent = "";
+    $("descCount").textContent = 0;
+    $("tipEcho").textContent = 150;
+    $("err").textContent = "";
+    $("currentUserAvatar").textContent = getInitials($("fName").value);
 
-        clearRows();
-        addRow();
-        showView("form");
-    };
+    clearRows();
+    addRow();
+    showView("form");
+  };
 
-    $("claimBtn").onclick = function () {
-        this.disabled = true;
-        this.querySelector("span").textContent = "Food Run Claimed";
-    };
+  $("claimBtn").onclick = function () {
+    if (this.dataset.cancelUrl) {
+      if (!window.confirm("Cancel this food run? This cannot be undone.")) {
+        return;
+      }
 
-    window.addEventListener("storage", function (e) {
-        if (e.key === STORAGE_KEY && e.newValue) {
-            try {
-                renderOrder(JSON.parse(e.newValue));
-            } catch (err) {
-                // bad data, ignore
+      var button = this;
+      fetch(this.dataset.cancelUrl, {
+        method: "POST",
+        headers: {
+          "X-CSRFToken": getCsrfToken(),
+        },
+      })
+        .then(function (response) {
+          return response.json().then(function (data) {
+            if (!response.ok) {
+              throw new Error(data.error || "Unable to cancel the food run.");
             }
-        }
-    });
+            return data;
+          });
+        })
+        .then(function () {
+          button.disabled = true;
+          button.dataset.cancelUrl = "";
+          button.querySelector("span").textContent = "Food Run Cancelled";
+        })
+        .catch(function (error) {
+          $("err").textContent = error.message;
+        });
+      return;
+    }
 
+    if (this.dataset.acceptUrl) {
+      var acceptButton = this;
+      acceptButton.disabled = true;
+      acceptButton.querySelector("span").textContent = "Accepting...";
+      fetch(this.dataset.acceptUrl, {
+        method: "POST",
+        headers: {
+          "X-CSRFToken": getCsrfToken(),
+        },
+      })
+        .then(function (response) {
+          return response.json().then(function (data) {
+            if (!response.ok) {
+              throw new Error(data.error || "Unable to accept the food run.");
+            }
+            return data;
+          });
+        })
+        .then(function () {
+          acceptButton.dataset.acceptUrl = "";
+          acceptButton.querySelector("span").textContent = "Accepted & Ongoing";
+        })
+        .catch(function (error) {
+          acceptButton.disabled = false;
+          acceptButton.querySelector("span").textContent =
+            "Accept & Claim Food Run";
+          $("err").textContent = error.message;
+        });
+      return;
+    }
+
+    this.disabled = true;
+    this.querySelector("span").textContent = "Food Run Claimed";
+  };
+
+  window.addEventListener("storage", function (e) {
+    if (e.key === STORAGE_KEY && e.newValue) {
+      try {
+        renderOrder(JSON.parse(e.newValue));
+      } catch (err) {
+        // bad data, ignore
+      }
+    }
+  });
+
+  var initialOrder = $("initial-order-data");
+  if (initialOrder && initialOrder.textContent) {
+    renderOrder(JSON.parse(initialOrder.textContent));
+  }
 })();
